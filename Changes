@@ -1,5 +1,18 @@
 Revision history for Perl extension Net::Google.
 
+0.51	 Sat Oct 26 2002
+
+	 - Updated ::Search.pm to watch '__endIndex' key and have it take 
+	   precedence over max_results method if the former is less than 
+	   the latter. (Props to Bjoern Hoehrmann for the fix.)
+
+	 - Added return_estimatedTotal() method to do the same thing but
+	   comparing against '__estimatedTotalResultsCount'
+
+	 - Replaced test.pl with t/*.t files
+
+	 - Updated POD
+
 0.5	 Wed May 03 2002
 	 
 	 - Contributed patch by Marc Hedlund <marc@precipice.org>.

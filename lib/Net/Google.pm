@@ -60,7 +60,7 @@ use Net::Google::Search;
 use Net::Google::Spelling;
 use Net::Google::Cache;
 
-$Net::Google::VERSION   = '0.5';
+$Net::Google::VERSION   = '0.51';
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -374,6 +374,8 @@ L<Net::Google::Spelling>
 L<Net::Google::Cache>
 
 L<Net::Google::Response>
+
+http://aaronland.info/weblog/archive/4231
 
 =head1 TO DO
 

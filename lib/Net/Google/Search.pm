@@ -37,7 +37,7 @@ use Carp;
 use Exporter;
 use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = '0.2.2';
+$Net::Google::Search::VERSION   = '0.3';
 @Net::Google::Search::ISA       = qw (Exporter);
 @Net::Google::Search::EXPORT    = qw ();
 @Net::Google::Search::EXPORT_OK = qw ();
@@ -49,6 +49,8 @@ use constant RESTRICT_LANGUAGES => qw [ ar zh-CN zh-TW cs da nl en et fi fr de e
 use constant RESTRICT_COUNTRIES => qw [ AD AE AF AG AI AL AM AN AO AQ AR AS AT AU AW AZ BA BB BD BE BF BG BH BI BJ BM BN BO BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CN CO CR CU CV CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET EU FI FJ FK FM FO FR FX GA GD GE GF GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IO IQ IR IS IT JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI ML NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR ST SV SY SZ TC TD TF TG TH TJ TK TM TN TO TP TR TT TV TW TZ UA UG UK UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT YU ZA ZM ZR ];
 
 use constant RESTRICT_TOPICS => qw [ unclesam linux mac bsd ];
+
+use constant WATCH => "__estimatedTotalResultsCount";
 
 =head1 OBJECT METHODS
 
@@ -417,6 +419,25 @@ sub oe {
   return join("",@{$self->{'_oe'}});
 }
 
+=head2 $pkg->return_estimatedTotal($bool)
+
+Toggle whether or not to return all the results defined by the '__estimatedTotalResultsCount' key.
+
+Default is false.
+
+=cut
+
+sub return_estimatedTotal {
+  my $self = shift;
+  my $bool = shift;
+
+  if (defined($bool)) {
+    $self->{'__estimatedTotal'} = ($bool) ? 1 : 0;
+  }
+
+  return $self->{'__estimatedTotal'};
+}
+
 =head2 $pkg->response()
 
 Returns an array ref of I<Net::Google::Response> objects, from which the search
@@ -447,17 +468,39 @@ sub response {
     # move on if there's a problem.
 
     my $res = $self->_response($start_at,$count) || next;
+
+    #
+
+    if ((! $self->return_estimatedTotal()) && ($start_at >= $res->{__endIndex})) {
+      last;
+    }
+
+    #
+
+    if ($self->return_estimatedTotal()) {
+
+      if (($self->{'__possible'} + scalar(@{$res->resultElements()})) >  $res->{'__estimatedTotalResultsCount'}) {
+
+	my $justright = int($res->{'__estimatedTotalResultsCount'} - $self->{'__possible'});
+	@{$res->resultElements()} = @{$res->resultElements()}[0..($justright -1)];
+
+	push @{$self->{'__response'}} , $res;
+	last;
+      }
+
+      $self->{'__possible'} += scalar(@{$res->resultElements()});
+
+      if (($self->{'__possible'} + scalar(@{$res->resultElements()})) ==  $res->{'__estimatedTotalResultsCount'}) {
+	last;
+      }
+    }
+
+    #
+
     push @{$self->{'__response'}}, $res;
 
-    if (scalar (@{$res->resultElements()}) < 10) {
-      $to_fetch = 0;
-    }
-
-    else {
-      $start_at += 10;
-      $to_fetch -= 10;
-    }
-
+    $start_at += 10;
+    $to_fetch -= 10;
   }
 
   return $self->{'__response'};
@@ -527,11 +570,11 @@ sub _state {
 
 =head1 VERSION
 
-0.2.2
+0.3
 
 =head1 DATE
 
-May 03, 2002
+Oct 26, 2002
 
 =head1 AUTHOR
 
