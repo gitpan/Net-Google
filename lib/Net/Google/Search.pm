@@ -52,7 +52,7 @@ use base qw (Net::Google::tool);
 use Carp;
 use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = '0.5';
+$Net::Google::Search::VERSION   = '0.6';
 
 use constant RESTRICT_ENCODING => qw [ arabic gb big5 latin1 latin2 latin3 latin4 latin5 latin6 greek hebrew sjis euc-jp euc-kr cyrillic utf8 ];
 
@@ -537,10 +537,17 @@ sub _response {
 		       $first,
 		       $count,
 		       SOAP::Data->type(boolean=>($self->filter() 
-						  ? 1 : 0)),
+						  ? "true" : "false")),
+		                                  # I don't think I should need to
+		                                  # do this but SOAP::Lite doesn't
+		                                  # appear to be doing to right thing
+		                                  # see also : RT bug #6167
+		                                  # ? 1 : 0)),
 		       $self->restrict(),
 		       SOAP::Data->type(boolean=>($self->safe() 
-						  ? 1 : 0)),
+						  ? "true" : "false")),
+		                                  # see above
+		                                  # ? 1 : 0)),
 		       $self->lr(),
 		       # input encoding
 		       undef,
@@ -565,11 +572,11 @@ sub _state {
 
 =head1 VERSION
 
-0.5
+0.6
 
 =head1 DATE
 
-$Date: 2004/02/10 04:18:55 $
+$Date: 2004/06/02 14:25:29 $
 
 =head1 AUTHOR
 

@@ -66,7 +66,7 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::VERSION = '0.61';
+$Net::Google::VERSION = '0.62';
 
 =head1 PACKAGE METHODS
 
@@ -444,11 +444,11 @@ sub _parse_args {
 
 =head1 VERSION
 
-0.61
+0.62
 
 =head1 DATE
 
-$Date: 2004/02/10 04:18:55 $
+$Date: 2004/06/02 14:25:29 $
 
 =head1 AUTHOR
 

@@ -1,10 +1,10 @@
 use strict;
 use Test::More;
 
-
 use constant TMPFILE => "./blib/google-api.key";
-use constant WRONG   => "muntreal qweebec";
-use constant CORRECT => "montreal quebec";
+
+use constant WRONG   => "nu yirk citee";
+use constant CORRECT => "new york city";
 
 my $key = $ARGV[0];
 
@@ -42,3 +42,4 @@ sub run_test {
   is($spelling->suggest(),CORRECT,"The correct spelling of '".WRONG."' is '".CORRECT."'");
 }
 
+# $Id: 002-spelling.t,v 1.6 2004/06/02 13:31:32 asc Exp $

@@ -1,4 +1,22 @@
-Revision history for Perl extension Net::Google.
+# Revision history for Perl extension Net::Google.
+# $Id: Changes,v 1.21 2004/06/02 14:29:25 asc Exp $
+
+0.62	 Wed Jun 02, 2004
+
+	 - Fixed POD in N:G:Response (RT bug #5351)
+
+	 - Updated spel(l)ings in t/002-spelling.t
+	   (RT bug #6183)
+
+	 - Updated N:G:Search to account to weirdness
+	   in the way SOAP::Lite handles booleans. Not
+	   clear that this is necessarily a problem in
+           SOAP::Lite but the patch fixes a reported bug
+	   and doesn't seem to break anything else so...
+	   (RT bug #6167)
+
+	 - Added explicit call to $search->filter(1)
+	   in t/001-search.t (RT bug #6167)
 
 0.61	 Mon Feb 09, 2004
 
