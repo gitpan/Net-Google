@@ -39,7 +39,7 @@ use Net::Google::Search;
 use Net::Google::Spelling;
 use Net::Google::Cache;
 
-$Net::Google::VERSION   = 0.4.1;
+$Net::Google::VERSION   = 0.4.2;
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -328,11 +328,11 @@ sub _service {
 
 =head1 VERSION
 
-0.4.1
+0.4.2
 
 =head1 DATE
 
-April 15, 2002
+April 17, 2002
 
 =head1 AUTHOR
 

@@ -1,6 +1,8 @@
 Changes
 lib/Net/Google.pm
 lib/Net/Google/Search.pm
+lib/Net/Google/Spelling.pm
+lib/Net/Google/Cache.pm
 lib/Net/Google/Services/GoogleSearch.wsdl
 MANIFEST
 Makefile.PL
