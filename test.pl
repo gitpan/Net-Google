@@ -16,6 +16,14 @@ if (&t4(&t3(&t2(&t1)))) {
 }
 
 sub t1 {
+
+  print 
+    "The Google API web service requires that you provide create a Google Account and obtain a license key\n",
+      "This key is then passed with each request you make to the Google servers.\n",
+	"If you do not already have a Google Account, you can sign up for one here:\n",
+	  "http://www.google.com/apis/\n",
+	    "\n";
+  
   $key = &ask("Please enter your Google key");
   
   if ($key) {

@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Spelling::VERSION   = 0.1.1;
+$Net::Google::Spelling::VERSION   = '0.1.2';
 @Net::Google::Spelling::ISA       = qw (Exporter);
 @Net::Google::Spelling::EXPORT    = qw ();
 @Net::Google::Spelling::EXPORT_OK = qw ();
@@ -156,11 +156,11 @@ sub suggest {
 
 =head1 VERSION
 
-0.1.1
+0.1.2
 
 =head1 DATE
 
-April 15, 2002
+May 01, 2002
 
 =head1 AUTHOR
 

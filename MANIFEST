@@ -1,5 +1,6 @@
 Changes
 lib/Net/Google.pm
+lib/Net/Google/Response.pm
 lib/Net/Google/Search.pm
 lib/Net/Google/Spelling.pm
 lib/Net/Google/Cache.pm

@@ -12,6 +12,8 @@ Net::Google - simple OOP-ish interface to the Google SOAP API
  my $google = Net::Google->new(key=>LOCAL_GOOGLE_KEY);
  my $search = $google->search();
 
+ # Search interface
+
  $search->query(qw(aaron straup cope));
  $search->lr(qw(en fr));
  $search->ie("utf8");
@@ -20,6 +22,25 @@ Net::Google - simple OOP-ish interface to the Google SOAP API
  $search->max_results(15);
 
  map { print $_->title()."\n"; } @{$search->results()};
+
+ # or...
+
+ foreach my $r (@{$search->response()}) {
+   print "Search time :".$r->searchTime()."\n";
+
+   # returns an array ref of Result objects
+   # the same as the $search->results() method
+   map { print $_->URL()."\n"; } @{$r->resultElements()};
+ }
+
+ # Spelling interface
+
+ print $google->spelling(phrase=>"muntreal qwebec")->suggest(),"\n";
+
+ # Cache interface
+
+ my $cache = $google->cache(url=>"http://search.cpan.org/recent");
+ print $cache->get();
 
 =head1 DESCRIPTION
 
@@ -39,7 +60,7 @@ use Net::Google::Search;
 use Net::Google::Spelling;
 use Net::Google::Cache;
 
-$Net::Google::VERSION   = 0.4.2;
+$Net::Google::VERSION   = '0.5';
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -328,15 +349,19 @@ sub _service {
 
 =head1 VERSION
 
-0.4.2
+0.5
 
 =head1 DATE
 
-April 17, 2002
+May 03, 2002
 
 =head1 AUTHOR
 
 Aaron Straup Cope
+
+=head1 CONTRIBUTORS
+
+Marc Hedlund <marc@precipice.org>
 
 =head1 SEE ALSO
 
@@ -347,6 +372,8 @@ L<Net::Google::Search>
 L<Net::Google::Spelling>
 
 L<Net::Google::Cache>
+
+L<Net::Google::Response>
 
 =head1 TO DO
 

@@ -12,6 +12,16 @@ Net::Google::Search - simple OOP-ish interface to the Google SOAP API for search
  $search->query(qw(aaron cope));
  map { print $_->title()."\n"; } @{$search->results()};
 
+ # or
+
+ foreach my $r (@{$search->response()}) {
+   print "Search time :".$r->searchTime()."\n";
+
+   # returns an array ref of Result objects
+   # the same as the $search->results() method
+   map { print $_->URL()."\n"; } @{$r->resultElement()}
+ }
+
 =head1 DESCRIPTION
 
 Provides a simple OOP-ish interface to the Google SOAP API for searching.
@@ -25,8 +35,9 @@ use strict;
 
 use Carp;
 use Exporter;
+use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = 0.2.2;
+$Net::Google::Search::VERSION   = '0.2.2';
 @Net::Google::Search::ISA       = qw (Exporter);
 @Net::Google::Search::EXPORT    = qw ();
 @Net::Google::Search::EXPORT_OK = qw ();
@@ -39,7 +50,7 @@ use constant RESTRICT_COUNTRIES => qw [ AD AE AF AG AI AL AM AN AO AQ AR AS AT A
 
 use constant RESTRICT_TOPICS => qw [ unclesam linux mac bsd ];
 
-=head1 Class Methods
+=head1 OBJECT METHODS
 
 =head2 $pkg = Net::Google::Search->new($service,\%args)
 
@@ -406,26 +417,39 @@ sub oe {
   return join("",@{$self->{'_oe'}});
 }
 
-=head2 $pkg->results()
+=head2 $pkg->response()
 
-Returns an array ref of I<Result> objects.
+Returns an array ref of I<Net::Google::Response> objects, from which the search
+response metadata as well as the search results may be obtained.
+
+Use this method if you would like to receive a full response as documented
+in the Google Web APIs Reference (the whole of section 3).
 
 =cut
 
-sub results {
+sub response {
   my $self = shift;
 
-  my $start_at = $self->starts_at();
-  my $to_fetch = $self->max_results();
-  my $results  = [];
+  if ($self->{'__state'} eq $self->_state()) {
+    return $self->{'__response'};
+  }
+
+  $self->{'__response'} = [];
+
+  my $start_at  = $self->starts_at();
+  my $to_fetch  = $self->max_results();
 
   while ($to_fetch > 0) {
     my $count = ($to_fetch > 10) ? 10 : $to_fetch;
-    my $items = $self->_results($start_at,$count);
 
-    push @{$results}, @$items;
+    # Net::Google::Response will carp
+    # if there's a problem so we just
+    # move on if there's a problem.
 
-    if (scalar (@$items) < 10) {
+    my $res = $self->_response($start_at,$count) || next;
+    push @{$self->{'__response'}}, $res;
+
+    if (scalar (@{$res->resultElements()}) < 10) {
       $to_fetch = 0;
     }
 
@@ -436,92 +460,69 @@ sub results {
 
   }
 
-  return $results;
+  return $self->{'__response'};
 }
 
-=head1 Private Methods
+=head2 $pkg->results()
 
-=head2 $pkg->_results($first,$count)
+Returns an array ref of I<Result> objects (see docs for I<Net::Google::Response>), each of
+which represents one result from the search.
+
+Use this method if you don't care about the search response metadata, and only care about the
+resources that are found by the search, as described in section 3.2 of the Google Web APIs Reference.
 
 =cut
 
-sub _results {
+sub results {
+  my $self = shift;
+  return [ map { @{ $_->resultElements() } } @{$self->response()} ];
+}
+
+=head1 PRIVATE METHODS
+
+=head2 $pkg->_response($first,$count)
+
+=cut
+
+sub _response {
   my $self  = shift;
   my $first = shift;
   my $count = shift;
 
-  my $result = $self->{'_service'}->doGoogleSearch(
-						   $self->key(),
-						   $self->query(),
-						   $first,
-						   $count,
-						   SOAP::Data->type(boolean=>($self->filter() ? "true" : "false")),
-						   $self->restrict(),
-						   SOAP::Data->type(boolean=>($self->safe() ? "true" : "false")),
-						   $self->lr(),
-						   $self->ie(),
-						   $self->oe(),
-						  );
+  my $response = 
+    $self->{'_service'}
+      ->doGoogleSearch(
+		       $self->key(),
+		       $self->query(),
+		       $first,
+		       $count,
+		       SOAP::Data->type(boolean=>($self->filter() 
+						  ? "true" : "false")),
+		       $self->restrict(),
+		       SOAP::Data->type(boolean=>($self->safe() 
+						  ? "true" : "false")),
+		       $self->lr(),
+		       $self->ie(),
+		       $self->oe(),
+		      );
 
-  if(ref($result->{resultElements}) eq "ARRAY") {
-    map { $_ = Result->new($_); } @{$result->{resultElements}};
-    return $result->{resultElements};
+  if (! $response) {
+    return undef;
   }
 
-  return [];
+  $self->{'__state'} = $self->_state();
+  return Net::Google::Response->new($response);
 }
 
-=head1 Result Methods
+=head2 $pkg->_state()
 
 =cut
 
-package Result;
-use vars qw ($AUTOLOAD);
-
-sub new {
-  my $pkg = shift;
-  my $res = shift;
-  return bless $res,$pkg;
-}
-
-=head2 $result->title()
-
-Returns a string.
-
-=head2 $result->URL()
-
-Returns a string.
-
-=head2 $result->snippet()
-
-Returns a string, formatted in HTML.
-
-=head2 $result->cachedSize()
-
-Returns a string.
-
-=head2 $result->directoryTitle()
-
-Returns a string.
-
-=head2 $result->summary()
-
-Returns a string.
-
-=head2 $result->hostName()
-
-Returns a string.
-
-=head2 $result->directoryCategory()
-
-Returns a hash reference.
-
-=cut
-
-sub AUTOLOAD {
-  my $self = shift;
-  $AUTOLOAD =~ s/.*:://;
-  return $self->{$AUTOLOAD};
+sub _state {
+  my $self  = shift;
+  my $state = undef;
+  map {$state .= $self->$_()} qw (query lr restrict ie oe safe filter starts_at max_results);
+  return $state;
 }
 
 =head1 VERSION
@@ -530,11 +531,15 @@ sub AUTOLOAD {
 
 =head1 DATE
 
-April 15, 2002
+May 03, 2002
 
 =head1 AUTHOR
 
 Aaron Straup Cope
+
+=head1 CONTRIBUTORS
+
+Marc Hedlund <marc@precipice.org>
 
 =head1 TO DO
 

@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Cache::VERSION   = 0.1.1;
+$Net::Google::Cache::VERSION   = '0.1.2';
 @Net::Google::Cache::ISA       = qw (Exporter);
 @Net::Google::Cache::EXPORT    = qw ();
 @Net::Google::Cache::EXPORT_OK = qw ();
@@ -150,11 +150,11 @@ sub get {
 
 =head1 VERSION
 
-0.1.1
+0.1.2
 
 =head1 DATE
 
-April 15, 2002
+May 01, 2002
 
 =head1 AUTHOR
 

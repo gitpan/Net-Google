@@ -1,5 +1,31 @@
 Revision history for Perl extension Net::Google.
 
+0.5	 Wed May 03 2002
+	 
+	 - Contributed patch by Marc Hedlund <marc@precipice.org>.
+	   Thanks!
+
+	 - Put single quotes around all $VERSION numbers in order to
+           match MakeMaker's expected format (see ExtUtils::MakeMaker
+           perldoc, Using Attributes and Parameters: VERSION_FROM).
+           Fixes make install errors with perl-5.6.1.
+
+	 - Created a new Net::Google::Response object to hold more
+           information from the search response.
+
+	 - Updated Net::Google::Search to use Net::Google::Response.
+
+	 - Added Net::Google::Search::_state and introduced some degree
+	   of memoization to response/result objects
+
+	 - Moved most of the code in Net::Google::Search::results into
+	   Net::Google::Search::response
+
+	 - Updated test.pl to be a bit more verbose (Thanks to Lee Goddard 
+	   and the CPAN-testers.)
+
+	 - Updated POD
+	 
 0.4.2	 Wed Apr 17 2002
 
 	 - No changes to actual codebase. Fixed errors in MANIFEST 
