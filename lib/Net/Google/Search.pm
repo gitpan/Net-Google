@@ -60,7 +60,7 @@ Where I<$service> is a valid I<GoogleSearchService> object.
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -570,11 +570,11 @@ sub _state {
 
 =head1 VERSION
 
-0.3
+0.31
 
 =head1 DATE
 
-Oct 26, 2002
+November 01, 2002
 
 =head1 AUTHOR
 
@@ -586,7 +586,7 @@ Marc Hedlund <marc@precipice.org>
 
 =head1 TO DO
 
-=over
+=over 4
 
 =item *
 

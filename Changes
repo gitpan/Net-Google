@@ -1,5 +1,27 @@
 Revision history for Perl extension Net::Google.
 
+0.52	 Sat Nov 02 2002
+
+	 - Removed old code from ::Google.pm (duh)
+
+	 - Updated POD
+
+0.52_1	 Fri Nov 01 2002
+
+	 - Added Net::Google::Service, which isn't anything new but
+	   just an abstracting of the code to return SOAP widgets
+
+	 - Added leading '&' to constants so that they'll play nicely
+	   with Perl 5.005_02 (see note in ::Service.pm - props to 
+	   Martin Ebert for pointing this out.)
+
+	 - Updated to use CPAN::MakeMaker
+
+	 - Fussed with .t files (mostly just so that they work correctly
+	   when I call them from the command line)
+
+	 - Updated POD
+
 0.51	 Sat Oct 26 2002
 
 	 - Updated ::Search.pm to watch '__endIndex' key and have it take 

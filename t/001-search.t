@@ -2,19 +2,31 @@ use strict;
 
 use Test::More;
 
-
 use constant TMPFILE    => "./blib/google-api.key";
 use constant QUERY      => "related:http://perl.aaronland.net"; 
 use constant MAXRESULTS => 50;
 
 my $key = $ARGV[0];
 
-if ((! $key) && (open KEY , "<".TMPFILE)) {
-  plan tests => 5;
+if ($key) {
+  &run_test();
+}
 
-  my $key = <KEY>;
+elsif (open KEY , "<".TMPFILE) {
+  $key = <KEY>;
   chomp $key;
   close KEY;
+
+  &run_test();
+}
+
+else {
+  plan tests => 1;
+  ok($key,"Read Google API key");
+}
+
+sub run_test {
+  plan tests => 5;
 
   ok($key,"Read Google API key");
 
@@ -34,10 +46,6 @@ if ((! $key) && (open KEY , "<".TMPFILE)) {
   
   print "Google returned ".scalar(@$results)." results:\n";
   map { print $_->URL()."\n"; } @{$results};
-
-  exit;
 }
 
-plan tests => 1;
-ok($key,"Read Google API key");
 

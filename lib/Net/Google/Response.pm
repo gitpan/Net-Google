@@ -65,7 +65,7 @@ use Exporter;
 
 use vars qw ($AUTOLOAD);
 
-$Net::Google::Response::VERSION   = '0.1';
+$Net::Google::Response::VERSION   = '0.11';
 @Net::Google::Response::ISA       = qw (Exporter);
 @Net::Google::Response::EXPORT    = qw ();
 @Net::Google::Response::EXPORT_OK = qw ();
@@ -103,7 +103,7 @@ sub init {
     }
   }
 
-  map { $self->{'__'.$_} = $response->{$_}; } RESPONSE_FIELDS;
+  map { $self->{'__'.$_} = $response->{$_}; } &RESPONSE_FIELDS;
   return 1;
 }
 
@@ -190,7 +190,7 @@ sub AUTOLOAD {
 
   $AUTOLOAD =~ s/.*:://;
   
-  unless (grep/^($AUTOLOAD)$/,RESPONSE_FIELDS) {
+  unless (grep/^($AUTOLOAD)$/,&RESPONSE_FIELDS) {
     carp "Unknown attribute : ".$AUTOLOAD;
     return undef;
   }
@@ -227,7 +227,7 @@ sub init {
     return 0;
   }
 
-  map { $self->{'__'.$_} = $res->{$_}; } RESULT_FIELDS;
+  map { $self->{'__'.$_} = $res->{$_}; } &RESULT_FIELDS;
   return 1;
 }
 
@@ -269,7 +269,7 @@ sub AUTOLOAD {
   my $self = shift;
   $AUTOLOAD =~ s/.*:://;
 
-  unless (grep/^($AUTOLOAD)$/,RESULT_FIELDS) {
+  unless (grep/^($AUTOLOAD)$/,&RESULT_FIELDS) {
     carp "Unknown attribute :".$AUTOLOAD;
     return undef;
   }
@@ -283,11 +283,11 @@ sub DESTROY {
 
 =head1 VERSION
 
-0.1
+0.11
 
 =head1 DATE
 
-May 02, 2002
+November 01, 2002
 
 =head1 AUTHOR
 

@@ -8,12 +8,26 @@ use constant CORRECT => "montreal quebec";
 
 my $key = $ARGV[0];
 
-if ((! $key) && (open KEY , "<".TMPFILE)) {
-  plan tests => 5;
+if ($key) {
+  &run_test();
+}
 
+elsif (open KEY , "<".TMPFILE) {
   $key = <KEY>;
   chomp $key;
   close KEY;
+
+  &run_test();
+}
+
+else {
+  plan tests => 1;
+
+  ok($key,"Read Google API key");
+}
+
+sub run_test {
+  plan tests => 5;
 
   ok($key,"Read Google API key");
   use_ok("Net::Google");
@@ -26,9 +40,5 @@ if ((! $key) && (open KEY , "<".TMPFILE)) {
   
   $spelling->phrase(WRONG);
   is($spelling->suggest(),CORRECT,"The correct spelling of '".WRONG."' is '".CORRECT."'");
-
-  exit;
 }
 
-plan tests => 1;
-ok($key,"Read Google API key");

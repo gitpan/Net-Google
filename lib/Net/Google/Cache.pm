@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Cache::VERSION   = '0.1.2';
+$Net::Google::Cache::VERSION   = '0.13';
 @Net::Google::Cache::ISA       = qw (Exporter);
 @Net::Google::Cache::EXPORT    = qw ();
 @Net::Google::Cache::EXPORT_OK = qw ();
@@ -39,7 +39,7 @@ Where I<$service> is a valid I<GoogleSearchService> object.
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -150,11 +150,11 @@ sub get {
 
 =head1 VERSION
 
-0.1.2
+0.13
 
 =head1 DATE
 
-May 01, 2002
+November 01, 2002
 
 =head1 AUTHOR
 
@@ -162,7 +162,7 @@ Aaron Straup Cope
 
 =head1 TO DO
 
-=over
+=over 4
 
 =item *
 

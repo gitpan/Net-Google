@@ -54,34 +54,15 @@ use strict;
 use Carp;
 use Exporter;
 
-use SOAP::Lite;
-
 use Net::Google::Search;
 use Net::Google::Spelling;
 use Net::Google::Cache;
+use Net::Google::Service;
 
-$Net::Google::VERSION   = '0.51';
+$Net::Google::VERSION   = '0.52';
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
-
-# This clever hack is courtesy Matt Webb:
-# http://interconnected.org/home/more/GoogleSearch.pl.txt
-
-# Redefine how the default deserializer handles booleans.
-# Workaround because the 1999 schema implementation incorrectly doesn't
-# accept "true" and "false" for boolean values.
-# See http://groups.yahoo.com/group/soaplite/message/895
-
-*SOAP::XMLSchema1999::Deserializer::as_boolean =
-  *SOAP::XMLSchemaSOAP1_1::Deserializer::as_boolean = 
-  \&SOAP::XMLSchema2001::Deserializer::as_boolean;
-
-use constant SERVICES => {
-			  "cache"    => "GoogleSearch.wsdl",
-			  "search"   => "GoogleSearch.wsdl",
-			  "spelling" => "GoogleSearch.wsdl",
-			 };
 
 =head1 Google methods
 
@@ -89,7 +70,7 @@ use constant SERVICES => {
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -133,7 +114,7 @@ sub init {
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -200,14 +181,14 @@ sub search {
   $args->{key}   = $key;
 
   return Net::Google::Search->new(
-				  $self->_soap("search",debug=>$debug),
+ 				  Net::Google::Service->search("search",{debug=>$debug}),
 				  $args,
 				 );
 }
 
 =head2 $pkg->spelling(%args)
 
-=over
+=over 4
 
 =item *
 
@@ -244,7 +225,7 @@ sub spelling {
   $args->{key}   = $key;
 
   return Net::Google::Spelling->new(
-				    $self->_soap("spelling",debug=>$debug),
+				    Net::Google::Service->spelling({debug=>$debug}),
 				    $args,
 				   );
 }
@@ -253,7 +234,7 @@ sub spelling {
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -290,70 +271,18 @@ sub cache {
   $args->{key}   = $key;
 
   return Net::Google::Cache->new(
-				    $self->_soap("cache",debug=>$debug),
-				    $args,
-				   );
-}
-
-=head1 Private Methods
-
-=head2 $pkg->_soap($service,%args)
-
-=cut
-
-sub _soap {
-  my $self    = shift;
-  my $service = shift;
-  my $args    = {@_};
-
-  my $soap = SOAP::Lite->service("file:".$self->_service($service));
-
-  if ($args->{'debug'}) {
-    $soap->on_debug(sub{print @_;});
-  } 
-
-  $soap->on_fault(sub{
-		    my ($soap,$res) = @_; 
-		    my $err = (ref($res)) ? $res->faultstring() : $soap->transport()->status();
-		    
-		    carp $err;
-		    return undef;
-		  });
-
-  return $soap;
-}
-
-=head2 $pkg->_service($service)
-
-=cut
-
-sub _service {
-  my $self    = shift;
-  my $service = shift;
-
-  if (exists $self->{'_services'}{$service}) {
-    return $self->{'_services'}{$service};
-  }
-
-  $self->{'_services'}{$service} = undef;
-
-  foreach my $dir (@INC) {
-    if (-f "$dir/Net/Google/Services/".SERVICES->{$service}) {
-      $self->{'_services'}{$service} = "$dir/Net/Google/Services/".SERVICES->{$service};
-      last;
-    }
-  }
-
-  return $self->{'_services'}{$service};
+				 Net::Google::Service->cache({debug=>$debug}),
+				 $args,
+				);
 }
 
 =head1 VERSION
 
-0.5
+0.52
 
 =head1 DATE
 
-May 03, 2002
+November 02, 2002
 
 =head1 AUTHOR
 
@@ -375,19 +304,39 @@ L<Net::Google::Cache>
 
 L<Net::Google::Response>
 
+L<Net::Google::Service>
+
 http://aaronland.info/weblog/archive/4231
 
 =head1 TO DO
 
-=over
+=over 4
+
+=item * 
+
+Tickle the tests so that they will pass on systems without 
+Test::More - this is planned for 0.53
 
 =item *
 
-Add some sort of functionality for managing multiple keys. Sort of like what is describe here :
+Add tests for filters - this is planned for either 0.53 or
+0.54
+
+=item *
+
+Add some sort of functionality for managing multiple keys. 
+Sort of like what is describe here :
 
 http://aaronland.net/weblog/archive/4204
 
+This will probably happen around the time Hell freezes over
+so if you think you can do it faster, go nuts.
+
 =back
+
+=head1 BUGS
+
+Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 

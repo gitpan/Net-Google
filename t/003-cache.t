@@ -8,12 +8,26 @@ use constant URL     => "http://aaronland.net";
 
 my $key = $ARGV[0];
 
-if ((! $key) && (open KEY , "<".TMPFILE)) {
-  plan tests => 5;
+if ($key) {
+  &run_test();
+}
 
+elsif (open KEY , "<".TMPFILE) {
   $key = <KEY>;
   chomp $key;
   close KEY;
+
+  &run_test();
+}
+
+else {
+  plan tests => 1;
+
+  ok($key,"Got Google API key");
+}
+
+sub run_test {
+  plan tests => 5;
 
   ok($key,"Got Google API key");
   use_ok("Net::Google");
@@ -30,7 +44,5 @@ if ((! $key) && (open KEY , "<".TMPFILE)) {
   exit;
 }
 
-plan tests => 1;
-ok($key,"Got Google API key");
 
 

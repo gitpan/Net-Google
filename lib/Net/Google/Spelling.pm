@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Spelling::VERSION   = '0.1.2';
+$Net::Google::Spelling::VERSION   = '0.13';
 @Net::Google::Spelling::ISA       = qw (Exporter);
 @Net::Google::Spelling::EXPORT    = qw ();
 @Net::Google::Spelling::EXPORT_OK = qw ();
@@ -39,7 +39,7 @@ Where I<$service> is a valid I<GoogleSearchService> object.
 
 Valid arguments are :
 
-=over
+=over 4
 
 =item *
 
@@ -156,11 +156,11 @@ sub suggest {
 
 =head1 VERSION
 
-0.1.2
+0.13
 
 =head1 DATE
 
-May 01, 2002
+November 01, 2002
 
 =head1 AUTHOR
 

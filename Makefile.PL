@@ -1,6 +1,4 @@
-use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+use CPAN::MakeMaker;
 WriteMakefile(
 	      'NAME'	=> 'Net::Google',
 	      ($[ >= 5.005) ?
@@ -10,7 +8,7 @@ WriteMakefile(
 	      'PREREQ_PM'    => {
 				 SOAP::Lite    => 0, 
 				 Carp          => 0,
-				 # For tests
+				 Test::More    => 0,
 				 Cwd           => 0,
 				},
 	      dist	        => {COMPRESS => 'gzip', SUFFIX => 'tar.gz'},
