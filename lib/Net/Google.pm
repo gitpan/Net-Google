@@ -34,9 +34,12 @@ use Carp;
 use Exporter;
 
 use SOAP::Lite;
-use Net::Google::Search;
 
-$Net::Google::VERSION   = 0.3.1;
+use Net::Google::Search;
+use Net::Google::Spelling;
+use Net::Google::Cache;
+
+$Net::Google::VERSION   = 0.4;
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -54,7 +57,9 @@ $Net::Google::VERSION   = 0.3.1;
   \&SOAP::XMLSchema2001::Deserializer::as_boolean;
 
 use constant SERVICES => {
-			  "search" => "GoogleSearch.wsdl",
+			  "cache"    => "GoogleSearch.wsdl",
+			  "search"   => "GoogleSearch.wsdl",
+			  "spelling" => "GoogleSearch.wsdl",
 			 };
 
 =head1 Google methods
@@ -159,6 +164,84 @@ sub search {
 				 );
 }
 
+=head2 $pkg->spelling(%args)
+
+=over
+
+=item B<key>
+
+String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+
+=item B<phrase>
+
+String or array reference.
+
+=item B<debug>
+
+Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
+
+=back
+
+Returns a I<Net::Google::Spelling> object. Returns undef if there was an error.
+
+=cut
+
+sub spelling {
+  my $self = shift;
+  my $args = {@_};
+
+  my $key   = (defined($args->{'key'}))   ? $args->{key}   : $self->{'_key'};
+  my $debug = (defined($args->{'debug'})) ? $args->{debug} : $self->{'_debug'};
+
+  $args->{debug} = $debug;
+  $args->{key}   = $key;
+
+  return Net::Google::Spelling->new(
+				    $self->_soap("spelling",debug=>$debug),
+				    $args,
+				   );
+}
+
+=head2 $pkg->cache(%args)
+
+Valid arguments are :
+
+=over
+
+=item B<key>
+
+String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+
+=item B<url>
+
+String.
+
+=item B<debug>
+
+Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
+
+=back
+
+Returns a I<Net::Google::Cache> object. Returns undef if there was an error.
+
+=cut
+
+sub cache {
+  my $self = shift;
+  my $args = {@_};
+
+  my $key   = (defined($args->{'key'}))   ? $args->{key}   : $self->{'_key'};
+  my $debug = (defined($args->{'debug'})) ? $args->{debug} : $self->{'_debug'};
+
+  $args->{debug} = $debug;
+  $args->{key}   = $key;
+
+  return Net::Google::Cache->new(
+				    $self->_soap("cache",debug=>$debug),
+				    $args,
+				   );
+}
+
 =head1 Private Methods
 
 =head2 $pkg->_soap($service,%args)
@@ -213,11 +296,11 @@ sub _service {
 
 =head1 VERSION
 
-0.3.1
+0.4
 
 =head1 DATE
 
-April 13, 2002
+April 14, 2002
 
 =head1 AUTHOR
 
@@ -229,6 +312,10 @@ http://www.google.com/apis
 
 L<Net::Google::Search>
 
+L<Net::Google::Spelling>
+
+L<Net::Google::Cache>
+
 =head1 TO DO
 
 =over
@@ -238,10 +325,6 @@ L<Net::Google::Search>
 Add some sort of functionality for managing multiple keys. Sort of like what is describe here :
 
 http://aaronland.net/weblog/archive/4204
-
-=item
-
-Finish adding other services.
 
 =back
 

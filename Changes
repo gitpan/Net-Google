@@ -1,5 +1,15 @@
 Revision history for Perl extension Net::Google.
 
+0.4	 Sun Apr 14 2002
+
+	 - Added Google::Spelling package and Google::spelling method
+
+	 - Added Google::Cache package and Google::cache method
+
+	 - Added Perl license to Google::Search.pm
+
+	 - Updated POD in Google.pm and Google::Search.pm
+
 0.3.1	 Sun Apr 14 2002
 
 	 - Fixed error handling in ::Google::_soap

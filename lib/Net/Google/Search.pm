@@ -7,7 +7,7 @@ Net::Google::Search
 =head1 SYNOPSIS
 
  use Net::Google::Search;
- my $search = Net::Google::Search($service,%args);
+ my $search = Net::Google::Search($service,\%args);
 
  $search->query(qw(aaron cope));
  map { print $_->title()."\n"; } @{$search->results()};
@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Search::VERSION   = 0.2;
+$Net::Google::Search::VERSION   = 0.2.1;
 @Net::Google::Search::ISA       = qw (Exporter);
 @Net::Google::Search::EXPORT    = qw ();
 @Net::Google::Search::EXPORT_OK = qw ();
@@ -41,7 +41,7 @@ use constant RESTRICT_TOPICS => qw [ unclesam linux mac bsd ];
 
 =head1 Class Methods
 
-=head2 $pkg = Net::Google::Search->new($service,%args)
+=head2 $pkg = Net::Google::Search->new($service,\%args)
 
 Where I<$service> is a valid I<GoogleSearchService> object.
 
@@ -510,11 +510,11 @@ sub AUTOLOAD {
 
 =head1 VERSION
 
-0.2
+0.2.1
 
 =head1 DATE
 
-April 13, 2002
+April 14, 2002
 
 =head1 AUTHOR
 
@@ -537,6 +537,8 @@ L<Net::Google>
 =head1 LICENSE
 
 Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+
+This is free software, you may use it and distribute it under the same terms as Perl itself.
 
 =cut
 
