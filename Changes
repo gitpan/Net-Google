@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::Google.
 
+0.4.1	 Mon Apr 15 2002
+
+	 - Went through all the packages and fixed POD errors (ugh.)
+
 0.4	 Sun Apr 14 2002
 
 	 - Added Google::Spelling package and Google::spelling method

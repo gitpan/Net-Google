@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Net::Google
+Net::Google - simple OOP-ish interface to the Google SOAP API
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ use Net::Google::Search;
 use Net::Google::Spelling;
 use Net::Google::Cache;
 
-$Net::Google::VERSION   = 0.4;
+$Net::Google::VERSION   = 0.4.1;
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -70,11 +70,15 @@ Valid arguments are :
 
 =over
 
-=item B<key>
+=item *
+
+B<key>
 
 I<String>. 
 
-=item B<debug>
+=item *
+
+B<debug>
 
 I<Boolean>
 
@@ -110,35 +114,51 @@ Valid arguments are :
 
 =over
 
-=item B<key>
+=item *
+
+B<key>
 
 String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
 
-=item B<starts_at>
+=item *
+
+B<starts_at>
 
 Int. First result number to display. Default is 0.
 
-=item B<max_results>
+=item *
+
+B<max_results>
 
 Int. Number of results to return. Default is 10.
 
-=item B<lr>
+=item *
+
+B<lr>
 
 String or array reference. Language restrictions.
 
-=item B<ie>
+=item *
+
+B<ie>
 
 String or array reference. Input encoding.
 
-=item B<oe>
+=item *
+
+B<oe>
 
 String or array reference. Output encoding.
 
-=item B<safe>
+=item *
+
+B<safe>
 
 Boolean.
 
-=item B<filter>
+=item *
+
+B<filter>
 
 Boolean.
 
@@ -168,15 +188,21 @@ sub search {
 
 =over
 
-=item B<key>
+=item *
+
+B<key>
 
 String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
 
-=item B<phrase>
+=item *
+
+B<phrase>
 
 String or array reference.
 
-=item B<debug>
+=item *
+
+B<debug>
 
 Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
 
@@ -208,15 +234,21 @@ Valid arguments are :
 
 =over
 
-=item B<key>
+=item *
+
+B<key>
 
 String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
 
-=item B<url>
+=item *
+
+B<url>
 
 String.
 
-=item B<debug>
+=item *
+
+B<debug>
 
 Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
 
@@ -296,11 +328,11 @@ sub _service {
 
 =head1 VERSION
 
-0.4
+0.4.1
 
 =head1 DATE
 
-April 14, 2002
+April 15, 2002
 
 =head1 AUTHOR
 
@@ -320,7 +352,7 @@ L<Net::Google::Cache>
 
 =over
 
-=item
+=item *
 
 Add some sort of functionality for managing multiple keys. Sort of like what is describe here :
 

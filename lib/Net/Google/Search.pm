@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Net::Google::Search
+Net::Google::Search - simple OOP-ish interface to the Google SOAP API for searching
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Search::VERSION   = 0.2.1;
+$Net::Google::Search::VERSION   = 0.2.2;
 @Net::Google::Search::ISA       = qw (Exporter);
 @Net::Google::Search::EXPORT    = qw ();
 @Net::Google::Search::EXPORT_OK = qw ();
@@ -49,35 +49,51 @@ Valid arguments are :
 
 =over
 
-=item B<key>
+=item *
+
+B<key>
 
 String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
 
-=item B<starts_at>
+=item *
+
+B<starts_at>
 
 Int. First result number to display. Default is 0.
 
-=item B<max_results>
+=item *
+
+B<max_results>
 
 Int. Number of results to return. Default is 10.
 
-=item B<lr>
+=item *
+
+B<lr>
 
 String or array reference. Language restrictions.
 
-=item B<ie>
+=item *
+
+B<ie>
 
 String or array reference. Input encoding.
 
-=item B<oe>
+=item *
+
+B<oe>
 
 String or array reference. Output encoding.
 
-=item B<safe>
+=item *
+
+B<safe>
 
 Boolean.
 
-=item B<filter>
+=item *
+
+B<filter>
 
 Boolean.
 
@@ -510,11 +526,11 @@ sub AUTOLOAD {
 
 =head1 VERSION
 
-0.2.1
+0.2.2
 
 =head1 DATE
 
-April 14, 2002
+April 15, 2002
 
 =head1 AUTHOR
 
@@ -524,7 +540,7 @@ Aaron Straup Cope
 
 =over
 
-=item
+=item *
 
 Add hooks to manage boolean searches and speacial query strings.
 
