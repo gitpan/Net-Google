@@ -1,0 +1,7 @@
+Changes
+lib/Net/Google.pm
+lib/Net/Google/Search.pm
+lib/Net/Google/Services/GoogleSearch.wsdl
+MANIFEST
+Makefile.PL
+test.pl

@@ -1,0 +1,38 @@
+Revision history for Perl extension Net::Google.
+
+0.3  Sat Apr 13 2002
+
+	- Fixed bugs in ::Search::results and ::Search::_results
+
+	- Added hooks to Search.pm constructor for setting values
+
+	- Added ::Google::_service to locate service descriptions via @INC
+
+	- Added ::Search::restrict and made ::Search::(lr|ie|oe) store values, internally, as array references
+
+	- ::Search::lr no longer returns data separated by pipe character
+
+	- Fixed ::Search::key to store values
+
+	- Fixed a bunch of instances where internal array references were not being flushed properly
+
+	- Removed sanity checking on arguments passed to search methods for the time being
+
+	- Fixed bug where parent debug flags wasn't being passed to child search objects
+
+	- Updated POD
+
+0.2  Fri Apr 12 2002
+
+	- Moved search related functions into Search.pm
+
+	- Added ability to return more than 10 results at a time
+
+	- Added most of the methods for setting search options
+
+	- Updated POD
+
+0.1  Thu Apr 11 2002
+
+	- Intial revision
+
