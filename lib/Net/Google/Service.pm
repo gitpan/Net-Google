@@ -16,7 +16,7 @@ SOAP widget(s) for Net::Google
 package Net::Google::Service;
 use strict;
 
-$Net::Google::Service::VERSION = '0.2';
+$Net::Google::Service::VERSION = '0.3';
 
 use SOAP::Lite;
 use Carp;
@@ -75,13 +75,21 @@ sub cache {
 sub _soap {
   my $pkg     = shift;
   my $service = shift;
-  my $args    = {@_};
+  my $args    = shift;
 
   my $soap = SOAP::Lite->service("file:".__PACKAGE__->_service($service));
 
+  if ($args->{'http_proxy'}) {
+    # Get the SOAP transport object
+    # Then get its proxy object (note the args)
+    # Which is really just an LWP::UserAgent
+    # so we get that and set the args (again)
+    $soap->transport()->proxy($args->{'http_proxy'})->proxy(http=>$args->{'http_proxy'});
+  }
+
   if ($args->{'debug'}) {
-    $soap->on_debug(sub{print @_;});
-  } 
+    SOAP::Trace->import(debug=>((ref($args->{debug}) eq "CODE") ? $args->{'debug'} : sub {print STDERR @_}));
+  }
 
   $soap->on_fault(sub{
 		    my ($soap,$res) = @_; 
@@ -127,11 +135,11 @@ sub _service {
 
 =head1 VERSION
 
-0.2
+0.3
 
 =head1 DATE
 
-$Date: 2003/02/22 16:48:52 $
+$Date: 2003/03/09 21:55:29 $
 
 =head1 AUTHOR
 

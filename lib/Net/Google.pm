@@ -48,25 +48,20 @@ Provides a simple OOP-ish interface to the Google SOAP API
 
 =cut
 
-package Net::Google;
 use strict;
 
+package Net::Google;
+use base qw (Net::Google::tool);
+
 use Carp;
-use Exporter;
 
-use Net::Google::Search;
-use Net::Google::Spelling;
-use Net::Google::Cache;
-use Net::Google::Service;
+$Net::Google::VERSION = '0.60';
 
-$Net::Google::VERSION   = '0.53';
-@Net::Google::ISA       = qw ( Exporter );
-@Net::Google::EXPORT    = qw ();
-@Net::Google::EXPORT_OK = qw ();
+=head1 PACKAGE METHODS
 
-=head1 Google methods
+=cut
 
-=head2 $google = Net::Google->new(%args)
+=head2 __PACKAGE__->new(\%args)
 
 Valid arguments are :
 
@@ -76,21 +71,50 @@ Valid arguments are :
 
 B<key>
 
-I<String>. 
+I<string>. A Google API key.
+
+=item *
+
+B<http_proxy>
+
+I<url>. A URL for proxy-ing HTTP requests.
 
 =item *
 
 B<debug>
 
-I<Boolean>
+Valid options are:
+
+=over 4
+
+=item *
+
+I<boolean>
+
+If true prints debugging information returned by SOAP::Lite
+to STDERR
+
+=item *
+
+I<coderef>.
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
+
+=back
+
+Note that prior to version 0.60, arguments were not passed
+by reference. Versions >= 0.60 are backwards compatible.
+
+Returns an object. Woot!
 
 =cut
 
 sub new {
   my $pkg = shift;
-  
+
   my $self = {};
   bless $self,$pkg;
 
@@ -103,14 +127,56 @@ sub new {
 
 sub init {
   my $self = shift;
-  my $args = {@_};
+  my $args = (ref($_[0]) eq "HASH") ? shift : {@_};
 
-  $self->{'_debug'} = $args->{'debug'};
-  $self->{'_key'}   = $args->{'key'};
+  $self->{'_debug'}      = $args->{'debug'};
+  $self->{'_key'}        = $args->{'key'};
+  $self->{'_http_proxy'} = $args->{'http_proxy'};
+
+  # Do *not* call parent
+  # class' init() method.
+
   return 1;
 }
 
-=head2 $google->search(%args)
+=head1 OBJECT METHODS
+
+=cut
+
+=head2 $obj->key($string)
+
+Get/set the Google API key for this object.
+
+=cut
+
+# Defined in Net::Google::tool
+
+=head2 $obj->http_proxy($url)
+
+Get/set the HTTP proxy for this object.
+
+Returns a string.
+
+=cut
+
+# Note we subclass the method normally inherited
+# from ::tool.pm. Since this is just a wrapper
+# module, we don't have a SOAP thingy to actually
+# set the proxy for so we'll just cache it for
+# later.
+
+sub http_proxy {
+  my $self = shift;
+  my $uri  = shift;
+
+  if ($uri) {
+    $self->{'_http_proxy'} = $uri;
+  }
+
+  return $self->{'_http_proxy'};
+}
+
+=head2 $obj->search(\%args)
 
 Valid arguments are :
 
@@ -120,73 +186,108 @@ Valid arguments are :
 
 B<key>
 
-String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+I<string>. A Google API key. 
+
+If none is provided then the key passed to the parent 
+I<Net::Google> object will be used.
 
 =item *
 
 B<starts_at>
 
-Int. First result number to display. Default is 0.
+I<int>. First result number to display. 
+
+Default is 0.
 
 =item *
 
 B<max_results>
 
-Int. Number of results to return. Default is 10.
+I<int>. Number of results to return. 
+
+Default is 10.
 
 =item *
 
 B<lr>
 
-String or array reference. Language restrictions.
+I<string> or I<array reference>. Language restrictions.
 
 =item *
 
 B<ie>
 
-String or array reference. Input encoding.
+I<string> or I<array reference>. Input encoding.
 
 =item *
 
 B<oe>
 
-String or array reference. Output encoding.
+I<string> or I<array reference>. Output encoding.
 
 =item *
 
 B<safe>
 
-Boolean.
+I<boolean>.
 
 =item *
 
 B<filter>
 
-Boolean.
+I<boolean>.
+
+=item *
+
+B<http_proxy>
+
+I<url>. A URL for proxy-ing HTTP requests.
+
+
+=item *
+
+B<debug>
+
+Valid options are:
+
+=over 4
+
+=item *
+
+I<boolean>
+
+If true prints debugging information returned by SOAP::Lite
+to STDERR
+
+=item *
+
+I<coderef>
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
 
-Returns a I<Net::Google::Search> object. Returns undef if there was an error.
+=back
+
+Note that prior to version 0.60, arguments were not passed
+by reference. Versions >= 0.60 are backwards compatible.
+
+Returns a I<Net::Google::Search> object. Woot!
+
+Returns undef if there was an error.
 
 =cut
 
 sub search {
   my $self = shift;
-  my $args = {@_};
-
-  my $key   = (defined($args->{'key'}))   ? $args->{key}   : $self->{'_key'};
-  my $debug = (defined($args->{'debug'})) ? $args->{debug} : $self->{'_debug'};
-
-  $args->{debug} = $debug;
-  $args->{key}   = $key;
-
-  return Net::Google::Search->new(
- 				  Net::Google::Service->search("search",{debug=>$debug}),
-				  $args,
-				 );
+  require Net::Google::Search;
+  return Net::Google::Search->new($self->_parse_args(@_));
 }
 
-=head2 $pkg->spelling(%args)
+=head2 $obj->spelling(\%args)
+
+Valid arguments are:
 
 =over 4
 
@@ -194,43 +295,70 @@ sub search {
 
 B<key>
 
-String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+I<string>. A Google API key. 
+
+If none is provided then the key passed to the parent 
+I<Net::Google> object will be used.
 
 =item *
 
 B<phrase>
 
-String or array reference.
+I<string> or I<array reference>.
+
+=item *
+
+B<http_proxy>
+
+I<url>. A URL for proxy-ing HTTP requests.
 
 =item *
 
 B<debug>
 
-Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
+=over 4
+
+=item *
+
+B<boolean>
+
+Prints debugging information returned by SOAP::Lite to STDERR
+
+=item *
+
+B<coderef>
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
 
-Returns a I<Net::Google::Spelling> object. Returns undef if there was an error.
+If no option is defined then the debug argument passed to the parent
+I<Net::Google> object will be used.
+
+=back
+
+Note that prior to version 0.60, arguments were not passed
+by reference. Versions >= 0.60 are backwards compatible.
+
+Returns a I<Net::Google::Spelling> object. Woot!
+
+Returns undef if there was an error.
 
 =cut
 
 sub spelling {
   my $self = shift;
-  my $args = {@_};
-
-  my $key   = (defined($args->{'key'}))   ? $args->{key}   : $self->{'_key'};
-  my $debug = (defined($args->{'debug'})) ? $args->{debug} : $self->{'_debug'};
-
-  $args->{debug} = $debug;
-  $args->{key}   = $key;
-
-  return Net::Google::Spelling->new(
-				    Net::Google::Service->spelling({debug=>$debug}),
-				    $args,
-				   );
+  require Net::Google::Spelling;
+  return Net::Google::Spelling->new($self->_parse_args(@_));
 }
 
-=head2 $pkg->cache(%args)
+# Small things are good because you can
+# fit them in your hand *and* your mouth.
+
+sub speling { return shift->spelling(@_); }
+
+=head2 $obj->cache(\%args)
 
 Valid arguments are :
 
@@ -240,49 +368,88 @@ Valid arguments are :
 
 B<key>
 
-String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+String. Google API key. 
+
+If none is provided then the key passed to the parent I<Net::Google> 
+object will be used.
 
 =item *
 
 B<url>
 
-String.
+I<string>
+
+=item *
+
+B<http_proxy>
+
+I<url>. A URL for proxy-ing HTTP requests.
 
 =item *
 
 B<debug>
 
-Int.If none is provided then the debug argument passed to the parent I<Net::Google> object will be used.
+Valid options are:
+
+=over 4
+
+=item *
+
+I<boolean>
+
+If true, prints debugging information returned by SOAP::Lite
+to STDERR
+
+=item *
+
+I<coderef>
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
 
-Returns a I<Net::Google::Cache> object. Returns undef if there was an error.
+If no option is defined then the debug argument passed to the parent
+I<Net::Google> object will be used.
+
+=back
+
+Note that prior to version 0.60, arguments were not passed
+by reference. Versions >= 0.60 are backwards compatible.
+
+Returns a I<Net::Google::Cache> object. Woot!
+
+Returns undef if there was an error.
 
 =cut
 
 sub cache {
   my $self = shift;
-  my $args = {@_};
+  require Net::Google::Cache;
+  return Net::Google::Cache->new($self->_parse_args(@_));
+}
 
-  my $key   = (defined($args->{'key'}))   ? $args->{key}   : $self->{'_key'};
-  my $debug = (defined($args->{'debug'})) ? $args->{debug} : $self->{'_debug'};
+#
 
-  $args->{debug} = $debug;
-  $args->{key}   = $key;
+sub _parse_args {
+  my $self = shift;
+  my $args = (ref($_[0]) eq "HASH") ? shift : {@_};
 
-  return Net::Google::Cache->new(
-				 Net::Google::Service->cache({debug=>$debug}),
-				 $args,
-				);
+  foreach my $el ("key","debug","http_proxy") {
+    next if (defined($args->{$el}));
+    $args->{$el} = $self->{"_$el"};
+  }
+
+  return $args;
 }
 
 =head1 VERSION
 
-0.53
+0.60
 
 =head1 DATE
 
-$Date: 2003/02/22 16:48:52 $
+$Date: 2003/03/10 14:20:18 $
 
 =head1 AUTHOR
 
@@ -312,15 +479,14 @@ http://aaronland.info/weblog/archive/4231
 
 =over 4
 
-=item * 
+=item *
 
 Tickle the tests so that they will pass on systems without
-Test::More - this is planned for 0.54
+Test::More.
 
 =item *
 
-Add tests for filters - this is planned for either 0.53 or
-0.54
+Add tests for filters.
 
 =item *
 
@@ -342,7 +508,8 @@ Please report all bugs via http://rt.cpan.org
 
 Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
-This is free software, you may use it and distribute it under the same terms as Perl itself.
+This is free software, you may use it and distribute it under the
+same terms as Perl itself.
 
 =cut
 

@@ -1,5 +1,47 @@
 Revision history for Perl extension Net::Google.
 
+0.60	 Mon Mar 10 2003
+
+	 - Blessed Net::Google as 0.60
+
+	 - Blessed Net::Google::tool as 1.0
+
+	 - Updated POD and added comments
+
+0.60_02	 Mon Mar 10 2003
+
+	 - Tweaked ::Google.pm to override 'http_proxy' method
+	   to store url for later use since it doesn't have a
+	   service thingy to update...duh.
+
+	 - Tweaked ::tool.pm 'http_proxy' method to store and 
+	   return url
+
+0.60_01	 Sun Mar 09 2003
+
+	 - Updated global and service-related constructors to 
+	   watch for an HTTP proxy argument.
+
+	 - Added 'http_proxy' and 'key' (where necessary) methods
+	   to global and service-related packages.
+
+         - Updated hooks to allow 'debug' argument to (optionally)
+	   be a reference to a subroutine.
+
+	 - Service related packages are loaded at run-time rather
+	   than compile-time.
+
+	 - Updated ::Service.pm to set HTTP proxy, if necessary.
+
+	 - Added Net::Google::tool as base class for most others.
+
+	 - Update Makefile.PL to check for LWP::Protocol::file
+
+	 - Updated Service.pm to set SOAP::Lite debugging via
+	   SOAP::Trace rather than deprecated 'on_debug' method.
+
+	 - Updated POD.
+
 0.53	 Sat Feb 22 2003
 
 	 - Checked for '__state'-ness before comparing it in

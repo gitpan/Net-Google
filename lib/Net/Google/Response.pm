@@ -11,7 +11,7 @@ API search responses
  my $session = $service->search();
 
  $session->query(qw(Perl modules));
-   
+
  my $response = $session->response();
  my $total    = $response->estimateTotalResultsNumber();
 
@@ -57,23 +57,28 @@ search result.
 
 =cut
 
-package Net::Google::Response;
 use strict;
 
-use Carp;
-use Exporter;
+package Net::Google::Response;
 
 use vars qw ($AUTOLOAD);
 
+use Carp;
+
 $Net::Google::Response::VERSION   = '0.12';
-@Net::Google::Response::ISA       = qw (Exporter);
-@Net::Google::Response::EXPORT    = qw ();
-@Net::Google::Response::EXPORT_OK = qw ();
 
 # Note that we handle 'resultElements' separately
 # Maybe we should doing the same w/ directoryCategories...
 
 use constant RESPONSE_FIELDS => qw [ directoryCategories estimateIsExact startIndex searchTime estimatedTotalResultsCount searchTips searchComments searchQuery endIndex documentFiltering ];
+
+=head1 PACKAGE METHODS
+
+=cut
+
+=head2 __PACKAGE__->new(\%args)
+
+=cut
 
 sub new {
   my $pkg    = shift;
@@ -107,7 +112,9 @@ sub init {
   return 1;
 }
 
-=head1 Search Response Methods
+=head1 I<Net::Google::Response> OBJECT METHODS
+
+=cut
 
 =head2 $response->documentFiltering()
 
@@ -231,6 +238,10 @@ sub init {
   return 1;
 }
 
+=head1 I<Result> OBJECT METHODS
+
+=cut
+
 =head2 $result->title()
 
 Returns a string.
@@ -287,7 +298,7 @@ sub DESTROY {
 
 =head1 DATE
 
-$Date: 2003/02/22 16:48:52 $
+$Date: 2003/03/09 21:55:28 $
 
 =head1 AUTHOR
 
@@ -305,7 +316,8 @@ L<Net::Google>
 
 Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
-This is free software, you may use it and distribute it under the same terms as Perl itself.
+This is free software, you may use it and distribute it under the
+same terms as Perl itself.
 
 =cut
 

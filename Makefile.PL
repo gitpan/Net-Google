@@ -6,10 +6,11 @@ WriteMakefile(
 	       ABSTRACT => 'Simple OOP-ish interface to the Google API') : (),
 	      'VERSION_FROM' => 'lib/Net/Google.pm',
 	      'PREREQ_PM'    => {
-				 SOAP::Lite    => 0, 
-				 Carp          => 0,
-				 Test::More    => 0,
-				 Cwd           => 0,
+				 SOAP::Lite          => '0',
+				 LWP::Protocol::file => '0',
+				 Carp                => '0',
+				 Test::More          => '0',
+				 Cwd                 => '0',
 				},
 	      dist	        => {COMPRESS => 'gzip', SUFFIX => 'tar.gz'},
 );

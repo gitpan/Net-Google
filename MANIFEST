@@ -1,4 +1,5 @@
 Changes
+CPAN/MakeMaker.pm
 lib/Net/Google.pm
 lib/Net/Google/Cache.pm
 lib/Net/Google/Response.pm
@@ -6,10 +7,10 @@ lib/Net/Google/Search.pm
 lib/Net/Google/Service.pm
 lib/Net/Google/Services/GoogleSearch.wsdl
 lib/Net/Google/Spelling.pm
+lib/Net/Google/tool.pm
 MANIFEST
 Makefile.PL
 t/000-key.t
 t/001-search.t
 t/002-spelling.t
 t/003-cache.t
-CPAN/MakeMaker.pm

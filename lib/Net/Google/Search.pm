@@ -7,7 +7,7 @@ Net::Google::Search - simple OOP-ish interface to the Google SOAP API for search
 =head1 SYNOPSIS
 
  use Net::Google::Search;
- my $search = Net::Google::Search($service,\%args);
+ my $search = Net::Google::Search->new(\%args);
 
  $search->query(qw(aaron cope));
  map { print $_->title()."\n"; } @{$search->results()};
@@ -30,17 +30,15 @@ This package is used by I<Net::Google>.
 
 =cut
 
-package Net::Google::Search;
 use strict;
 
+package Net::Google::Search;
+use base qw (Net::Google::tool);
+
 use Carp;
-use Exporter;
 use Net::Google::Response;
 
 $Net::Google::Search::VERSION   = '0.4';
-@Net::Google::Search::ISA       = qw (Exporter);
-@Net::Google::Search::EXPORT    = qw ();
-@Net::Google::Search::EXPORT_OK = qw ();
 
 use constant RESTRICT_ENCODING => qw [ arabic gb big5 latin1 latin2 latin3 latin4 latin5 latin6 greek hebrew sjis euc-jp euc-kr cyrillic utf8 ];
 
@@ -52,11 +50,11 @@ use constant RESTRICT_TOPICS => qw [ unclesam linux mac bsd ];
 
 use constant WATCH => "__estimatedTotalResultsCount";
 
-=head1 OBJECT METHODS
+=head1 PACKAGE METHODS
 
-=head2 $pkg = Net::Google::Search->new($service,\%args)
+=cut
 
-Where I<$service> is a valid I<GoogleSearchService> object.
+=head2 __PACKAGE__->new(\%args)
 
 Valid arguments are :
 
@@ -66,51 +64,95 @@ Valid arguments are :
 
 B<key>
 
-String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+I<string>. A Google API key. 
+
+If none is provided then the key passed to the parent I<Net::Google>
+object will be used.
 
 =item *
 
 B<starts_at>
 
-Int. First result number to display. Default is 0.
+I<int>. First result number to display. 
+
+Default is 0.
 
 =item *
 
 B<max_results>
 
-Int. Number of results to return. Default is 10.
+I<int>. Number of results to return. 
+
+Default is 10.
 
 =item *
 
 B<lr>
 
-String or array reference. Language restrictions.
+I<string> or I<array reference>. Language restrictions.
 
 =item *
 
 B<ie>
 
-String or array reference. Input encoding.
+I<string> or I<array reference>. Input encoding.
 
 =item *
 
 B<oe>
 
-String or array reference. Output encoding.
+I<string> or I<array reference>. Output encoding.
 
 =item *
 
 B<safe>
 
-Boolean.
+I<boolean>.
 
 =item *
 
 B<filter>
 
-Boolean.
+I<boolean>.
+
+=item *
+
+B<http_proxy>
+
+I<url>. A URL for proxy-ing HTTP requests.
+
+=item *
+
+B<debug>
+
+Valid options are:
+
+=over 4
+
+=item *
+
+I<boolean>
+
+If true prints debugging information returned by SOAP::Lite
+to STDERR
+
+=item *
+
+I<coderef>.
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
+
+=back
+
+The object constructor in Net::Google 0.53, and earlier, expected
+a I<GoogleSearchService> object as its first argument followed by
+ a hash reference of argument. Versions 0.6 and higher are backwards 
+compatible.
+
+Returns an object. Woot!
 
 =cut
 
@@ -120,7 +162,7 @@ sub new {
   my $self = {};
   bless $self,$pkg;
 
-  if (! $self->init(@_)) {
+  if (! $self->init("search",@_)) {
     return undef;
   }
 
@@ -128,23 +170,12 @@ sub new {
 }
 
 sub init {
-  my $self    = shift;
-  my $service = shift;
-  my $args    = shift;
+  my $self = shift;
 
-  if (ref($service) ne "GoogleSearchService") {
-    carp "Unknown service";
-    return 0;
-  }
+  my $args = $self->SUPER::init(@_)
+    || return 0;
 
-  $self->{'_service'}  = $service;
-
-  if (! $args->{'key'}) {
-    carp "You must define a key";
-    return 0;
-  }
-
-  $self->key($args->{'key'});
+  #
 
   $self->{'_query'}       = [];
   $self->{'_lr'}          = [];
@@ -194,30 +225,35 @@ sub init {
   return 1;
 }
 
-=head2 $pkg->key($key)
-
-Returns a string.
-
-Returns undef if there was an error.
+=head1 OBJECT METHODS
 
 =cut
 
-sub key {
-  my $self = shift;
-  my $key  = shift;
+=head2 $obj->key($string)
 
-  if (defined($key)) {
-    $self->{'_key'} = $key;
-  }
+Get/set the Google API key for this object.
 
-  return $self->{'_key'};
-}
+=cut
 
-=head2 $pkg->query(@data)
+# Defined in Net::Google::tool
 
-If the first item in I<@data> is empty, then any existing I<query> data will be removed before the new data is added.
+=head2 $obj->http_proxy($url)
 
-Returns a string of words separated by white space. Returns undef if there was an error.
+Get/set the HTTP proxy for this object.
+
+Returns a string.
+
+=cut
+
+# Defined in Net::Google::tool
+
+=head2 $obj->query(@data)
+
+If the first item in I<@data> is empty, then any existing I<query> data 
+will be removed before the new data is added.
+
+Returns a string of words separated by white space. Returns undef if there 
+was an error.
 
 =cut
 
@@ -236,7 +272,7 @@ sub query {
   return join(" ",@{$self->{'_query'}});
 }
 
-=head2 $pkg->starts_at($at)
+=head2 $obj->starts_at($at)
 
 Returns an int. Default is 0.
 
@@ -255,9 +291,11 @@ sub starts_at {
   return $self->{'_starts_at'};
 }
 
-=head2 $pkg->max_results($max)
+=head2 $obj->max_results($max)
 
-The default set by Google is 10 results. However, if you pass a number greater than 10 the I<results> method will make multiple calls to Google API.
+The default set by Google is 10 results. However, if you pass a number 
+greater than 10 the I<results> method will make multiple calls to Google 
+API.
 
 Returns an int.
 
@@ -282,9 +320,10 @@ sub max_results {
   return $self->{'_max_results'};
 }
 
-=head2 $pkg->restrict(@types)
+=head2 $obj->restrict(@types)
 
-If the first item in I<@types> is empty, then any existing I<restrict> data will be removed before the new data is added.
+If the first item in I<@types> is empty, then any existing I<restrict> data
+ will be removed before the new data is added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -306,7 +345,7 @@ sub restrict {
   return join("",@{$self->{'_restrict'}});
 }
 
-=head2 $pkg->filter($bool)
+=head2 $obj->filter($bool)
 
 Returns true or false. Returns undef if there was an error.
 
@@ -324,7 +363,7 @@ sub filter {
   return $self->{'_filter'};
 }
 
-=head2 $pkg->safe($bool)
+=head2 $obj->safe($bool)
 
 Returns true or false. Returns undef if there was an error.
 
@@ -341,11 +380,12 @@ sub safe {
   return $self->{'_safe'};
 }
 
-=head2 $pkg->lr(@lang)
+=head2 $obj->lr(@lang)
 
 Language restriction.
 
-If the first item in I<@lang> is empty, then any existing I<lr> data will be removed before the new data is added.
+If the first item in I<@lang> is empty, then any existing I<lr> data will
+ be removed before the new data is added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -367,11 +407,12 @@ sub lr {
   return join("",@{$self->{'_lr'}});
 }
 
-=head2 $pkg->ie(@types)
+=head2 $obj->ie(@types)
 
 Input encoding.
 
-If the first item in I<@types> is empty, then any existing I<ie> data will be removed before the new data is added.
+If the first item in I<@types> is empty, then any existing I<ie> data will be
+ removed before the new data is added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -393,11 +434,12 @@ sub ie {
   return join("",@{$self->{'_ie'}});
 }
 
-=head2 $pkg->oe(@types)
+=head2 $obj->oe(@types)
 
 Output encoding.
 
-If the first item in I<@types> is empty, then any existing I<oe> data will be removed before the new data is added.
+If the first item in I<@types> is empty, then any existing I<oe> data will be
+ removed before the new data is added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -419,9 +461,10 @@ sub oe {
   return join("",@{$self->{'_oe'}});
 }
 
-=head2 $pkg->return_estimatedTotal($bool)
+=head2 $obj->return_estimatedTotal($bool)
 
-Toggle whether or not to return all the results defined by the '__estimatedTotalResultsCount' key.
+Toggle whether or not to return all the results defined by the
+'__estimatedTotalResultsCount' key.
 
 Default is false.
 
@@ -438,7 +481,7 @@ sub return_estimatedTotal {
   return $self->{'__estimatedTotal'};
 }
 
-=head2 $pkg->response()
+=head2 $obj->response()
 
 Returns an array ref of I<Net::Google::Response> objects, from which the search
 response metadata as well as the search results may be obtained.
@@ -508,13 +551,14 @@ sub response {
   return $self->{'__response'};
 }
 
-=head2 $pkg->results()
+=head2 $obj->results()
 
-Returns an array ref of I<Result> objects (see docs for I<Net::Google::Response>), each of
-which represents one result from the search.
+Returns an array ref of I<Result> objects (see docs for I<Net::Google::Response>),
+each of which represents one result from the search.
 
-Use this method if you don't care about the search response metadata, and only care about the
-resources that are found by the search, as described in section 3.2 of the Google Web APIs Reference.
+Use this method if you don't care about the search response metadata, and only 
+care about the resources that are found by the search, as described in section 
+3.2 of the Google Web APIs Reference.
 
 =cut
 
@@ -522,12 +566,6 @@ sub results {
   my $self = shift;
   return [ map { @{ $_->resultElements() } } @{$self->response()} ];
 }
-
-=head1 PRIVATE METHODS
-
-=head2 $pkg->_response($first,$count)
-
-=cut
 
 sub _response {
   my $self  = shift;
@@ -559,10 +597,6 @@ sub _response {
   return Net::Google::Response->new($response);
 }
 
-=head2 $pkg->_state()
-
-=cut
-
 sub _state {
   my $self  = shift;
   my $state = undef;
@@ -576,7 +610,7 @@ sub _state {
 
 =head1 DATE
 
-$Date: 2003/02/22 16:48:52 $
+$Date: 2003/03/10 14:20:19 $
 
 =head1 AUTHOR
 

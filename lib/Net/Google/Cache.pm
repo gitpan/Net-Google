@@ -2,40 +2,39 @@
 
 =head1 NAME
 
-Net::Google::Cache - simple OOP-ish interface to the Google SOAP API for cached documents
+Net::Google::Cache - simple OOP-ish interface to the Google SOAP API for 
+cached documents
 
 =head1 SYNOPSIS
 
  use Net::Google::Cache;
- my $cache = Net::Google::Cache($service,\%args);
+ my $cache = Net::Google::Cache(\%args);
 
  $cache->url("http://aaronland.net);
  print $cache->get();
 
 =head1 DESCRIPTION
 
-Provides a simple OOP-ish interface to the Google SOAP API for cached documents.
+Provides a simple OOP-ish interface to the Google SOAP API for cached 
+documents.
 
 This package is used by I<Net::Google>.
 
 =cut
 
-package Net::Google::Cache;
 use strict;
+package Net::Google::Cache;
+use base qw (Net::Google::tool);
 
 use Carp;
-use Exporter;
 
-$Net::Google::Cache::VERSION   = '0.14';
-@Net::Google::Cache::ISA       = qw (Exporter);
-@Net::Google::Cache::EXPORT    = qw ();
-@Net::Google::Cache::EXPORT_OK = qw ();
+$Net::Google::Cache::VERSION   = '0.2';
 
-=head1 Class Methods
+=head1 PACKAGE METHODS
 
-=head2 $pkg = Net::Google::Cache->new($service,\%args)
+=cut
 
-Where I<$service> is a valid I<GoogleSearchService> object.
+=head2 __PACKAGE__->new(\%args)
 
 Valid arguments are :
 
@@ -45,21 +44,65 @@ Valid arguments are :
 
 B<key>
 
-String. Google API key. If none is provided then the key passed to the parent I<Net::Google> object will be used.
+I<string>. A Google API key. 
+
+If none is provided then the key passed to the parent I<Net::Google>
+object will be used.
 
 =item *
 
 B<url>
 
-String.
+I<string>.
+
+=item *
+
+B<http_proxy>
+
+I<url>. 
+
+Get/set the URL for proxy-ing HTTP request.
+
+Returns a string.
+
+=item *
+
+B<debug>
+
+Valid options are:
+
+=over 4
+
+=item *
+
+I<boolean>
+
+If true prints debugging information returned by SOAP::Lite
+to STDERR
+
+=item *
+
+I<coderef>.
+
+Your own subroutine for munging the debugging information
+returned by SOAP::Lite.
 
 =back
+
+=back
+
+The object constructor in Net::Google 0.53, and earlier, expected
+a I<GoogleSearchService> object as its first argument followed by
+ a hash reference of argument. Versions 0.6 and higher are backwards 
+compatible.
+
+Returns an object. Woot!
 
 =cut
 
 sub new {
   my $pkg = shift;
-  
+
   my $self = {};
   bless $self,$pkg;
 
@@ -71,47 +114,41 @@ sub new {
 }
 
 sub init {
-  my $self    = shift;
-  my $service = shift;
-  my $args    = shift;
+  my $self = shift;
 
-  if (ref($service) ne "GoogleSearchService") {
-    carp "Unknown service";
-    return 0;
-  }
+  my $args = $self->SUPER::init("cache",@_)
+    || return 0;
 
-  $self->{'_service'}  = $service;
-
-  if (! $args->{'key'}) {
-    carp "You must define a key";
-    return 0;
-  }
-
-  $self->key($args->{'key'});
+  #
 
   if ($args->{'url'}) {
     $self->url($args->{'url'});
   }
-  
+
   return 1;
 }
 
-=head2 $pkg->key($key)
-
-Returns a string. Returns undef if there was an error.
+=head1 OBJECT METHODS
 
 =cut
 
-sub key {
-  my $self = shift;
-  my $key  = shift;
+=head2 $obj->key($string)
 
-  if (defined($key)) {
-    $self->{'_key'} = $key;
-  }
+Get/set the Google API key for this object.
 
-  return $self->{'_key'};
-}
+=cut
+
+# Defined in Net::Google::tool
+
+=head2 $obj->http_proxy($url)
+
+Get/set the HTTP proxy for this object.
+
+Returns a string.
+
+=cut
+
+# Defined in Net::Google::tool
 
 =head2 $pkg->url($url)
 
@@ -150,11 +187,11 @@ sub get {
 
 =head1 VERSION
 
-0.14
+0.2
 
 =head1 DATE
 
-$Date: 2003/02/22 16:48:52 $
+$Date: 2003/03/10 14:20:19 $
 
 =head1 AUTHOR
 
