@@ -1,5 +1,27 @@
 Revision history for Perl extension Net::Google.
 
+0.61	 Mon Feb 09, 2004
+
+	 - Fixed bug in N:G:Search.pm that would cause
+	   an infinite loop when a user enters an invalid
+	   API key (RT bug #4208)
+
+	 - Fixed bug passing boolean for safe/filters
+	   (RT bug #2737)
+
+	 - Removed the N:G:Search->ie and N:G:Search->oe
+	   methods after reading the docs a little more
+	   carefully and seeing "The parameters <ie> and 
+	   <oe> are required in client requests but their 
+	   values are ignored." Gah! (RT bug #4393)
+
+	 - Fixed typo in method name in ::Response.pm
+	   (thanks to mystery rt.cpan user!)
+
+	 - Removed use of CPAN::MakeMaker
+
+	 - Updated POD
+
 0.60	 Mon Mar 10 2003
 
 	 - Blessed Net::Google as 0.60

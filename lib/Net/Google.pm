@@ -16,8 +16,6 @@ Net::Google - simple OOP-ish interface to the Google SOAP API
 
  $search->query(qw(aaron straup cope));
  $search->lr(qw(en fr));
- $search->ie("utf8");
- $search->oe("utf8");
  $search->starts_at(5);
  $search->max_results(15);
 
@@ -46,6 +44,19 @@ Net::Google - simple OOP-ish interface to the Google SOAP API
 
 Provides a simple OOP-ish interface to the Google SOAP API
 
+=head1 ENCODING
+
+According to the Google API docs :
+
+ "In order to support searching documents in multiple languages 
+ and character encodings the Google Web APIs perform all requests 
+ and responses in the UTF-8 encoding. The parameters <ie> and 
+ <oe> are required in client requests but their values are ignored.
+ Clients should encode all request data in UTF-8 and should expect
+ results to be in UTF-8."
+
+(This package takes care of setting both parameters in requests.)
+
 =cut
 
 use strict;
@@ -55,7 +66,7 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::VERSION = '0.60';
+$Net::Google::VERSION = '0.61';
 
 =head1 PACKAGE METHODS
 
@@ -212,18 +223,6 @@ Default is 10.
 B<lr>
 
 I<string> or I<array reference>. Language restrictions.
-
-=item *
-
-B<ie>
-
-I<string> or I<array reference>. Input encoding.
-
-=item *
-
-B<oe>
-
-I<string> or I<array reference>. Output encoding.
 
 =item *
 
@@ -445,11 +444,11 @@ sub _parse_args {
 
 =head1 VERSION
 
-0.60
+0.61
 
 =head1 DATE
 
-$Date: 2003/03/10 14:20:18 $
+$Date: 2004/02/10 04:18:55 $
 
 =head1 AUTHOR
 
@@ -506,7 +505,7 @@ Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 
-Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the
 same terms as Perl itself.

@@ -13,7 +13,7 @@ API search responses
  $session->query(qw(Perl modules));
 
  my $response = $session->response();
- my $total    = $response->estimateTotalResultsNumber();
+ my $total    = $response->estimateTotalResultsCount();
 
  ....
 
@@ -65,7 +65,7 @@ use vars qw ($AUTOLOAD);
 
 use Carp;
 
-$Net::Google::Response::VERSION   = '0.12';
+$Net::Google::Response::VERSION   = '0.2';
 
 # Note that we handle 'resultElements' separately
 # Maybe we should doing the same w/ directoryCategories...
@@ -124,7 +124,7 @@ Returns 0 if false, 1 if true.
 
 Returns a string.
 
-=head2 $response->estimateTotalResultsNumber()
+=head2 $response->estimateTotalResultsCount()
 
 Returns an integer.
 
@@ -294,11 +294,11 @@ sub DESTROY {
 
 =head1 VERSION
 
-0.12
+0.2
 
 =head1 DATE
 
-$Date: 2003/03/09 21:55:28 $
+$Date: 2004/02/10 04:18:55 $
 
 =head1 AUTHOR
 
@@ -314,7 +314,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the
 same terms as Perl itself.

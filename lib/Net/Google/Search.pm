@@ -24,9 +24,23 @@ Net::Google::Search - simple OOP-ish interface to the Google SOAP API for search
 
 =head1 DESCRIPTION
 
-Provides a simple OOP-ish interface to the Google SOAP API for searching.
+Provides a simple OOP-ish interface to the Google SOAP API 
+for searching.
 
 This package is used by I<Net::Google>.
+
+=head1 ENCODING
+
+According to the Google API docs :
+
+ "In order to support searching documents in multiple languages 
+ and character encodings the Google Web APIs perform all requests 
+ and responses in the UTF-8 encoding. The parameters <ie> and 
+ <oe> are required in client requests but their values are ignored.
+ Clients should encode all request data in UTF-8 and should expect
+ results to be in UTF-8."
+
+(This package takes care of setting both parameters in requests.)
 
 =cut
 
@@ -38,7 +52,7 @@ use base qw (Net::Google::tool);
 use Carp;
 use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = '0.4';
+$Net::Google::Search::VERSION   = '0.5';
 
 use constant RESTRICT_ENCODING => qw [ arabic gb big5 latin1 latin2 latin3 latin4 latin5 latin6 greek hebrew sjis euc-jp euc-kr cyrillic utf8 ];
 
@@ -90,18 +104,6 @@ Default is 10.
 B<lr>
 
 I<string> or I<array reference>. Language restrictions.
-
-=item *
-
-B<ie>
-
-I<string> or I<array reference>. Input encoding.
-
-=item *
-
-B<oe>
-
-I<string> or I<array reference>. Output encoding.
 
 =item *
 
@@ -180,8 +182,6 @@ sub init {
   $self->{'_query'}       = [];
   $self->{'_lr'}          = [];
   $self->{'_restrict'}    = [];
-  $self->{'_ie'}          = [];
-  $self->{'_oe'}          = [];
   $self->{'_safe'}        = 0;
   $self->{'_filter'}      = 0;
   $self->{'_starts_at'}   = 0;
@@ -196,14 +196,6 @@ sub init {
 
   if ($args->{restrict}) {
     defined($self->restrict( ((ref($args->{'restrict'}) eq "ARRAY") ? @{$args->{'restrict'}} : $args->{'restrict'}) )) || return 0;
-  }
-
-  if ($args->{ie}) {
-    defined($self->ie( ((ref($args->{'ie'}) eq "ARRAY") ? @{$args->{'ie'}} : $args->{'ie'}) )) || return 0;
-  }
-
-  if ($args->{oe}) {
-    defined($self->oe( ((ref($args->{'oe'}) eq "ARRAY") ? @{$args->{'oe'}} : $args->{'oe'}) )) || return 0;
   }
 
   if (defined($args->{'filter'})) {
@@ -229,6 +221,14 @@ sub init {
 
 =cut
 
+sub ie {
+    carp "The 'ie' method has been deprecated";
+}
+
+sub oe {
+    carp "The 'oe' method has been deprecated";
+}
+
 =head2 $obj->key($string)
 
 Get/set the Google API key for this object.
@@ -249,11 +249,11 @@ Returns a string.
 
 =head2 $obj->query(@data)
 
-If the first item in I<@data> is empty, then any existing I<query> data 
-will be removed before the new data is added.
+If the first item in I<@data> is empty, then any existing 
+I<query> data will be removed before the new data is added.
 
-Returns a string of words separated by white space. Returns undef if there 
-was an error.
+Returns a string of words separated by white space. Returns 
+undef if there was an error.
 
 =cut
 
@@ -293,9 +293,9 @@ sub starts_at {
 
 =head2 $obj->max_results($max)
 
-The default set by Google is 10 results. However, if you pass a number 
-greater than 10 the I<results> method will make multiple calls to Google 
-API.
+The default set by Google is 10 results. However, if 
+you pass a number greater than 10 the I<results> method 
+will make multiple calls to Google API.
 
 Returns an int.
 
@@ -322,8 +322,9 @@ sub max_results {
 
 =head2 $obj->restrict(@types)
 
-If the first item in I<@types> is empty, then any existing I<restrict> data
- will be removed before the new data is added.
+If the first item in I<@types> is empty, then any existing 
+I<restrict> data will be removed before the new data is 
+added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -384,8 +385,8 @@ sub safe {
 
 Language restriction.
 
-If the first item in I<@lang> is empty, then any existing I<lr> data will
- be removed before the new data is added.
+If the first item in I<@lang> is empty, then any existing 
+I<lr> data will be removed before the new data is added.
 
 Returns a string. Returns undef if there was an error.
 
@@ -405,60 +406,6 @@ sub lr {
   }
   
   return join("",@{$self->{'_lr'}});
-}
-
-=head2 $obj->ie(@types)
-
-Input encoding.
-
-If the first item in I<@types> is empty, then any existing I<ie> data will be
- removed before the new data is added.
-
-Returns a string. Returns undef if there was an error.
-
-=cut
-
-sub ie {
-  my $self  = shift;
-  my @types = @_;
-
-  if ((scalar(@types) > 1) && ($types[0] eq "")) {
-    $self->{'_ie'} = [];
-    shift @types;
-  }
-
-  if (@types) {
-    push @{$self->{'_ie'}},@types;
-  }
-
-  return join("",@{$self->{'_ie'}});
-}
-
-=head2 $obj->oe(@types)
-
-Output encoding.
-
-If the first item in I<@types> is empty, then any existing I<oe> data will be
- removed before the new data is added.
-
-Returns a string. Returns undef if there was an error.
-
-=cut
-
-sub oe {
-  my $self  = shift;
-  my @types = @_;
-
-  if ((scalar(@types) > 1) && ($types[0] eq "")) {
-    $self->{'_oe'} = [];
-    shift @types;
-  }
-
-  if (@types) {
-    push @{$self->{'_oe'}},@types;
-  }
-
-  return join("",@{$self->{'_oe'}});
 }
 
 =head2 $obj->return_estimatedTotal($bool)
@@ -483,11 +430,13 @@ sub return_estimatedTotal {
 
 =head2 $obj->response()
 
-Returns an array ref of I<Net::Google::Response> objects, from which the search
-response metadata as well as the search results may be obtained.
+Returns an array ref of I<Net::Google::Response> objects, 
+from which the search response metadata as well as the 
+search results may be obtained.
 
-Use this method if you would like to receive a full response as documented
-in the Google Web APIs Reference (the whole of section 3).
+Use this method if you would like to receive a full response
+ as documented in the Google Web APIs Reference (the whole 
+of section 3).
 
 =cut
 
@@ -512,11 +461,17 @@ sub response {
     # if there's a problem so we just
     # move on if there's a problem.
 
-    my $res = $self->_response($start_at,$count) || next;
+    my $res = $self->_response($start_at,$count);
+
+    if (! defined($res)) {
+	last;
+    }
 
     #
 
-    if ((! $self->return_estimatedTotal()) && ($start_at >= $res->{__endIndex})) {
+    if ((! $self->return_estimatedTotal()) &&
+	($start_at >= $res->{__endIndex})) {
+
       last;
     }
 
@@ -553,12 +508,14 @@ sub response {
 
 =head2 $obj->results()
 
-Returns an array ref of I<Result> objects (see docs for I<Net::Google::Response>),
-each of which represents one result from the search.
+Returns an array ref of I<Result> objects (see docs for 
+I<Net::Google::Response>), each of which represents one 
+result from the search.
 
-Use this method if you don't care about the search response metadata, and only 
-care about the resources that are found by the search, as described in section 
-3.2 of the Google Web APIs Reference.
+Use this method if you don't care about the search response 
+metadata, and only care about the resources that are found 
+by the search, as described in section 3.2 of the Google Web 
+APIs Reference.
 
 =cut
 
@@ -580,13 +537,15 @@ sub _response {
 		       $first,
 		       $count,
 		       SOAP::Data->type(boolean=>($self->filter() 
-						  ? "true" : "false")),
+						  ? 1 : 0)),
 		       $self->restrict(),
 		       SOAP::Data->type(boolean=>($self->safe() 
-						  ? "true" : "false")),
+						  ? 1 : 0)),
 		       $self->lr(),
-		       $self->ie(),
-		       $self->oe(),
+		       # input encoding
+		       undef,
+		       # output encoding
+		       undef,
 		      );
 
   if (! $response) {
@@ -600,17 +559,17 @@ sub _response {
 sub _state {
   my $self  = shift;
   my $state = undef;
-  map {$state .= $self->$_()} qw (query lr restrict ie oe safe filter starts_at max_results);
+  map {$state .= $self->$_()} qw (query lr restrict safe filter starts_at max_results);
   return $state;
 }
 
 =head1 VERSION
 
-0.4
+0.5
 
 =head1 DATE
 
-$Date: 2003/03/10 14:20:19 $
+$Date: 2004/02/10 04:18:55 $
 
 =head1 AUTHOR
 
@@ -636,9 +595,10 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
 
-This is free software, you may use it and distribute it under the same terms as Perl itself.
+This is free software, you may use it and distribute it under 
+the same terms as Perl itself.
 
 =cut
 

@@ -28,7 +28,7 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::Spelling::VERSION   = '0.2';
+$Net::Google::Spelling::VERSION   = '0.3';
 
 =head1 PACKAGE METHODS
 
@@ -190,11 +190,11 @@ sub suggest {
 
 =head1 VERSION
 
-0.2
+0.3
 
 =head1 DATE
 
-$Date: 2003/03/10 14:20:19 $
+$Date: 2004/02/10 04:18:55 $
 
 =head1 AUTHOR
 
@@ -206,7 +206,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same 
 terms as Perl itself.

@@ -1,7 +1,7 @@
 package Net::Google::tool;
 use strict;
 
-$Net::Google::tool::VERSION = '1.0';
+$Net::Google::tool::VERSION = '1.1';
 
 use Carp;
 
@@ -92,11 +92,11 @@ Base class and shared methods for Net::Google service classes.
 
 =head1 VERSION
 
-1.0
+1.1
 
 =head1 DATE
 
-$Date: 2003/03/10 14:20:19 $
+$Date: 2004/02/10 04:18:55 $
 
 =head1 AUTHOR
 
@@ -112,7 +112,7 @@ Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 
-Copyright (c) 2003, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2003-2004, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same 
 terms as Perl itself.
