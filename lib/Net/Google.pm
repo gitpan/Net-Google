@@ -36,7 +36,7 @@ use Exporter;
 use SOAP::Lite;
 use Net::Google::Search;
 
-$Net::Google::VERSION   = 0.3;
+$Net::Google::VERSION   = 0.3.1;
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -178,7 +178,9 @@ sub _soap {
 
   $soap->on_fault(sub{
 		    my ($soap,$res) = @_; 
-		    carp $res->faultstring();
+		    my $err = (ref($res)) ? $res->faultstring() : $soap->transport()->status();
+		    
+		    carp $err;
 		    return undef;
 		  });
 
@@ -211,7 +213,7 @@ sub _service {
 
 =head1 VERSION
 
-0.3
+0.3.1
 
 =head1 DATE
 

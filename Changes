@@ -1,38 +1,42 @@
 Revision history for Perl extension Net::Google.
 
-0.3  Sat Apr 13 2002
+0.3.1	 Sun Apr 14 2002
 
-	- Fixed bugs in ::Search::results and ::Search::_results
+	 - Fixed error handling in ::Google::_soap
 
-	- Added hooks to Search.pm constructor for setting values
+0.3	 Sat Apr 13 2002
 
-	- Added ::Google::_service to locate service descriptions via @INC
+	 - Fixed bugs in ::Search::results and ::Search::_results
 
-	- Added ::Search::restrict and made ::Search::(lr|ie|oe) store values, internally, as array references
+	 - Added hooks to Search.pm constructor for setting values
 
-	- ::Search::lr no longer returns data separated by pipe character
+	 - Added ::Google::_service to locate service descriptions via @INC
 
-	- Fixed ::Search::key to store values
+	 - Added ::Search::restrict and made ::Search::(lr|ie|oe) store values, internally, as array references
 
-	- Fixed a bunch of instances where internal array references were not being flushed properly
+	 - ::Search::lr no longer returns data separated by pipe character
 
-	- Removed sanity checking on arguments passed to search methods for the time being
+	 - Fixed ::Search::key to store values
 
-	- Fixed bug where parent debug flags wasn't being passed to child search objects
+	 - Fixed a bunch of instances where internal array references were not being flushed properly
 
-	- Updated POD
+	 - Removed sanity checking on arguments passed to search methods for the time being
 
-0.2  Fri Apr 12 2002
+	 - Fixed bug where parent debug flags wasn't being passed to child search objects
 
-	- Moved search related functions into Search.pm
+	 - Updated POD
 
-	- Added ability to return more than 10 results at a time
+0.2	 Fri Apr 12 2002
 
-	- Added most of the methods for setting search options
+	 - Moved search related functions into Search.pm
 
-	- Updated POD
+	 - Added ability to return more than 10 results at a time
 
-0.1  Thu Apr 11 2002
+	 - Added most of the methods for setting search options
 
-	- Intial revision
+	 - Updated POD
+
+0.1	 Thu Apr 11 2002
+
+	 - Intial revision
 
