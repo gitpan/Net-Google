@@ -16,6 +16,8 @@ SOAP widget(s) for Net::Google
 package Net::Google::Service;
 use strict;
 
+$Net::Google::Service::VERSION = '0.2';
+
 use SOAP::Lite;
 use Carp;
 
@@ -125,11 +127,11 @@ sub _service {
 
 =head1 VERSION
 
-0.1
+0.2
 
 =head1 DATE
 
-November 01, 2002
+$Date: 2003/02/22 16:48:52 $
 
 =head1 AUTHOR
 
@@ -141,7 +143,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 

@@ -37,7 +37,7 @@ use Carp;
 use Exporter;
 use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = '0.3';
+$Net::Google::Search::VERSION   = '0.4';
 @Net::Google::Search::ISA       = qw (Exporter);
 @Net::Google::Search::EXPORT    = qw ();
 @Net::Google::Search::EXPORT_OK = qw ();
@@ -451,7 +451,9 @@ in the Google Web APIs Reference (the whole of section 3).
 sub response {
   my $self = shift;
 
-  if ($self->{'__state'} eq $self->_state()) {
+  if (defined($self->{'__state'}) &&
+      ($self->{'__state'} eq $self->_state())) {
+
     return $self->{'__response'};
   }
 
@@ -570,11 +572,11 @@ sub _state {
 
 =head1 VERSION
 
-0.31
+0.4
 
 =head1 DATE
 
-November 01, 2002
+$Date: 2003/02/22 16:48:52 $
 
 =head1 AUTHOR
 
@@ -600,7 +602,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 

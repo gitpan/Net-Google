@@ -59,7 +59,7 @@ use Net::Google::Spelling;
 use Net::Google::Cache;
 use Net::Google::Service;
 
-$Net::Google::VERSION   = '0.52';
+$Net::Google::VERSION   = '0.53';
 @Net::Google::ISA       = qw ( Exporter );
 @Net::Google::EXPORT    = qw ();
 @Net::Google::EXPORT_OK = qw ();
@@ -278,11 +278,11 @@ sub cache {
 
 =head1 VERSION
 
-0.52
+0.53
 
 =head1 DATE
 
-November 02, 2002
+$Date: 2003/02/22 16:48:52 $
 
 =head1 AUTHOR
 
@@ -314,8 +314,8 @@ http://aaronland.info/weblog/archive/4231
 
 =item * 
 
-Tickle the tests so that they will pass on systems without 
-Test::More - this is planned for 0.53
+Tickle the tests so that they will pass on systems without
+Test::More - this is planned for 0.54
 
 =item *
 
@@ -340,7 +340,7 @@ Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 
-Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 

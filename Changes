@@ -1,5 +1,14 @@
 Revision history for Perl extension Net::Google.
 
+0.53	 Sat Feb 22 2003
+
+	 - Checked for '__state'-ness before comparing it in
+           ::Search.pm; would raise a warning when undefined and
+           -w flag was in effect (thanks to Sherzod Ruzmetov for 
+	   the heads up)
+	   
+	 - Updated POD
+
 0.52	 Sat Nov 02 2002
 
 	 - Removed old code from ::Google.pm (duh)

@@ -65,7 +65,7 @@ use Exporter;
 
 use vars qw ($AUTOLOAD);
 
-$Net::Google::Response::VERSION   = '0.11';
+$Net::Google::Response::VERSION   = '0.12';
 @Net::Google::Response::ISA       = qw (Exporter);
 @Net::Google::Response::EXPORT    = qw ();
 @Net::Google::Response::EXPORT_OK = qw ();
@@ -283,11 +283,11 @@ sub DESTROY {
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 DATE
 
-November 01, 2002
+$Date: 2003/02/22 16:48:52 $
 
 =head1 AUTHOR
 
@@ -303,7 +303,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 

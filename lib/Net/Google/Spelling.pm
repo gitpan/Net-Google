@@ -26,7 +26,7 @@ use strict;
 use Carp;
 use Exporter;
 
-$Net::Google::Spelling::VERSION   = '0.13';
+$Net::Google::Spelling::VERSION   = '0.14';
 @Net::Google::Spelling::ISA       = qw (Exporter);
 @Net::Google::Spelling::EXPORT    = qw ();
 @Net::Google::Spelling::EXPORT_OK = qw ();
@@ -156,11 +156,11 @@ sub suggest {
 
 =head1 VERSION
 
-0.13
+0.14
 
 =head1 DATE
 
-November 01, 2002
+$Date: 2003/02/22 16:48:52 $
 
 =head1 AUTHOR
 
@@ -172,7 +172,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2003, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 
