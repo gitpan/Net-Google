@@ -52,7 +52,7 @@ use base qw (Net::Google::tool);
 use Carp;
 use Net::Google::Response;
 
-$Net::Google::Search::VERSION   = '0.6';
+$Net::Google::Search::VERSION   = '1.0';
 
 use constant RESTRICT_ENCODING => qw [ arabic gb big5 latin1 latin2 latin3 latin4 latin5 latin6 greek hebrew sjis euc-jp euc-kr cyrillic utf8 ];
 
@@ -524,10 +524,21 @@ sub results {
   return [ map { @{ $_->resultElements() } } @{$self->response()} ];
 }
 
+=head2 $obj->queries_exhausted() 
+
+Returns true or false depending on whether or not the current in-memory
+B<session> has exhausted the Google API 1000 query limit.
+
+=cut
+
+# Defined in ::tool
+
 sub _response {
   my $self  = shift;
   my $first = shift;
   my $count = shift;
+
+  $self->_queries(1);
 
   my $response = 
     $self->{'_service'}
@@ -572,11 +583,11 @@ sub _state {
 
 =head1 VERSION
 
-0.6
+1.0
 
 =head1 DATE
 
-$Date: 2004/06/02 14:25:29 $
+$Date: 2005/03/26 20:49:03 $
 
 =head1 AUTHOR
 
@@ -602,7 +613,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2005, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under 
 the same terms as Perl itself.

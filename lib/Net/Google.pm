@@ -66,7 +66,10 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::VERSION = '0.62';
+$Net::Google::VERSION     = '1.0';
+
+$Net::Google::QUERY_LIMIT = 1000;
+$Net::Google::KEY_QUERIES = {};
 
 =head1 PACKAGE METHODS
 
@@ -428,6 +431,15 @@ sub cache {
   return Net::Google::Cache->new($self->_parse_args(@_));
 }
 
+=head2 $obj->queries_exhausted() 
+
+Returns true or false depending on whether or not the current in-memory
+B<session> has exhausted the Google API 1000 query limit.
+
+=cut
+
+# Defined in Net::Google::tool
+
 #
 
 sub _parse_args {
@@ -444,11 +456,11 @@ sub _parse_args {
 
 =head1 VERSION
 
-0.62
+1.0
 
 =head1 DATE
 
-$Date: 2004/06/02 14:25:29 $
+$Date: 2005/03/26 20:49:03 $
 
 =head1 AUTHOR
 
@@ -505,7 +517,7 @@ Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 
-Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2005, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the
 same terms as Perl itself.

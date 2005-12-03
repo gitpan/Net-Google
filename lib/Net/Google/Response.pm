@@ -12,18 +12,17 @@ API search responses
 
  $session->query(qw(Perl modules));
 
- my $response = $session->response();
- my $total    = $response->estimatedTotalResultsCount();
+ # You are probably better off calling
+ # $session->results() but if you want
+ # the raw response object(s) here ya go :
 
- ....
+ my $responses = $session->response();
+ my $count     = scalar(@$responses);
 
- # Note that this will return the same
- # thing as $reponse->resultElements()
+ # $r is a Net::Google::Response object
 
- my $results = $session->results();
-
- foreach my $result (@$results) {
-   print "<" . $result->URL() . ">\n";
+ foreach my $r (@$responses) {
+     print sprintf("%s : %s\n",$r->searchQuery(),$r->estimatedTotalResults());
  }
 
 =head1 DESCRIPTION
@@ -65,7 +64,7 @@ use vars qw ($AUTOLOAD);
 
 use Carp;
 
-$Net::Google::Response::VERSION   = '0.3';
+$Net::Google::Response::VERSION   = '1.0';
 
 # Note that we handle 'resultElements' separately
 # Maybe we should doing the same w/ directoryCategories...
@@ -294,11 +293,11 @@ sub DESTROY {
 
 =head1 VERSION
 
-0.3
+1.0
 
 =head1 DATE
 
-$Date: 2004/06/02 13:16:48 $
+$Date: 2005/04/02 21:51:16 $
 
 =head1 AUTHOR
 
@@ -314,7 +313,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2005, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the
 same terms as Perl itself.

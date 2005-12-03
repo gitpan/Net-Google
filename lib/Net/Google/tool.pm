@@ -5,6 +5,8 @@ $Net::Google::tool::VERSION = '1.1';
 
 use Carp;
 
+my %_queries = ();
+
 sub init {
   my $self    = shift;
   my $service = shift;
@@ -48,6 +50,28 @@ sub init {
   #
 
   return $args;
+}
+
+sub _queries {
+    my $self  = shift;
+    my $count = shift;
+
+    my $key = $self->key();
+
+    if (! exists($_queries{$key})) {
+	$_queries{$key} = 0;
+    }
+
+    if (int($count)) {
+	$_queries{$key} += int($count);
+    }
+
+    return $_queries{$key};
+}
+
+sub queries_exhausted {
+    my $self = shift;
+    return ($self->_queries() >= 1000) ? 1 : 0;
 }
 
 sub key {
@@ -96,7 +120,7 @@ Base class and shared methods for Net::Google service classes.
 
 =head1 DATE
 
-$Date: 2004/02/10 04:18:55 $
+$Date: 2005/03/26 20:49:03 $
 
 =head1 AUTHOR
 
@@ -112,7 +136,7 @@ Please report all bugs via http://rt.cpan.org
 
 =head1 LICENSE
 
-Copyright (c) 2003-2004, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2003-2005, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same 
 terms as Perl itself.

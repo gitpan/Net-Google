@@ -28,7 +28,7 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::Cache::VERSION   = '0.3';
+$Net::Google::Cache::VERSION   = '1.0';
 
 =head1 PACKAGE METHODS
 
@@ -179,19 +179,31 @@ Returns a string. Returns undef if there was an error.
 
 sub get {
   my $self = shift;
+
+  $self->_queries(1);
+
   return $self->{'_service'}->doGetCachedPage(
 					      $self->key(),
 					      $self->url(),
 					     );
 }
 
+=head2 $obj->queries_exhausted() 
+
+Returns true or false depending on whether or not the current in-memory
+B<session> has exhausted the Google API 1000 query limit.
+
+=cut
+
+# Defined in Net::Google::tool
+
 =head1 VERSION
 
-0.3
+1.0
 
 =head1 DATE
 
-$Date: 2004/02/10 04:18:55 $
+$Date: 2005/03/26 20:49:03 $
 
 =head1 AUTHOR
 
@@ -213,7 +225,7 @@ L<Net::Google>
 
 =head1 LICENSE
 
-Copyright (c) 2002-2004, Aaron Straup Cope. All Rights Reserved.
+Copyright (c) 2002-2005, Aaron Straup Cope. All Rights Reserved.
 
 This is free software, you may use it and distribute it under the same terms as Perl itself.
 

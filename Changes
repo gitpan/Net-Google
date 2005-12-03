@@ -1,5 +1,25 @@
 # Revision history for Perl extension Net::Google.
-# $Id: Changes,v 1.21 2004/06/02 14:29:25 asc Exp $
+# $Id: Changes,v 1.23 2005/04/02 21:51:16 asc Exp $
+
+1.0      Fri Dec 02, 2005
+
+	 - The "Nothing Special" release. It's just been almost
+	   three years. I think we can call it 1.0, don't you?
+
+	 - Added 'queries_exhausted' methods to indicate whether
+	   Google API query limit has been reached (RT ticket
+	   12001)
+
+	 - Fixed POD errors in Net::Google::Response (RT ticket
+	   8735)
+
+	 - Updated t/002-spelling.t (RT ticket 11386/11458)
+
+	 - Updated POD
+
+	 - Replace ExtUtils::MakeMaker with Module::Build
+
+         - Pass maintainership to Bill Stillwell
 
 0.62	 Wed Jun 02, 2004
 
