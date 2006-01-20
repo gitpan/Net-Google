@@ -1,5 +1,9 @@
 # Revision history for Perl extension Net::Google.
-# $Id: Changes,v 1.23 2005/04/02 21:51:16 asc Exp $
+# $Id: Changes,v 1.1.1.1 2006/01/12 03:37:31 was Exp $
+
+1.0.1	 Thu Jan 19, 2006
+
+         - Fix problem with Build.PL that caused tests to fail.
 
 1.0      Fri Dec 02, 2005
 

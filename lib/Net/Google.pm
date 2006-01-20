@@ -66,7 +66,7 @@ use base qw (Net::Google::tool);
 
 use Carp;
 
-$Net::Google::VERSION     = '1.0';
+$Net::Google::VERSION     = '1.0.1';
 
 $Net::Google::QUERY_LIMIT = 1000;
 $Net::Google::KEY_QUERIES = {};
@@ -460,7 +460,7 @@ sub _parse_args {
 
 =head1 DATE
 
-$Date: 2005/03/26 20:49:03 $
+$Date: 2006/01/12 03:37:31 $
 
 =head1 AUTHOR
 

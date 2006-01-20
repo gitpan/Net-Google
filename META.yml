@@ -1,7 +1,8 @@
 --- #YAML:1.0
 name: Net-Google
-version: 1.0
-author: ~
+version: 1.0.1
+author:
+  - Aaron Straup Cope
 abstract: simple OOP-ish interface to the Google SOAP API
 license: perl
 requires:
@@ -13,7 +14,7 @@ build_requires:
 provides:
   Net::Google:
     file: lib/Net/Google.pm
-    version: 1.0
+    version: 1.0.1
   Net::Google::Cache:
     file: lib/Net/Google/Cache.pm
     version: 1.0
@@ -35,4 +36,4 @@ provides:
   Result:
     file: lib/Net/Google/Response.pm
     version: 1.0
-generated_by: Module::Build version 0.2604
+generated_by: Module::Build version 0.25

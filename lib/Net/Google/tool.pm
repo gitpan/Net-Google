@@ -120,7 +120,7 @@ Base class and shared methods for Net::Google service classes.
 
 =head1 DATE
 
-$Date: 2005/03/26 20:49:03 $
+$Date: 2006/01/12 03:37:31 $
 
 =head1 AUTHOR
 

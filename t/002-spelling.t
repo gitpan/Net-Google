@@ -42,4 +42,4 @@ sub run_test {
   is($spelling->suggest(),CORRECT,"The correct spelling of '".WRONG."' is '".CORRECT."'");
 }
 
-# $Id: 002-spelling.t,v 1.7 2005/03/26 20:49:04 asc Exp $
+# $Id: 002-spelling.t,v 1.1.1.1 2006/01/12 03:37:31 was Exp $

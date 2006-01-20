@@ -49,5 +49,5 @@ sub run_test {
   map { print $_->URL()."\n"; } @{$results};
 }
 
-# $Id: 001-search.t,v 1.6 2004/06/02 14:25:30 asc Exp $
+# $Id: 001-search.t,v 1.1.1.1 2006/01/12 03:37:31 was Exp $
 
